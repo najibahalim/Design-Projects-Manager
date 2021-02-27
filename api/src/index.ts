@@ -15,7 +15,9 @@ import { attachPublicRoutes, attachPrivateRoutes } from './routes';
 const establishDatabaseConnection = async (): Promise<void> => {
   try {
     await createDatabaseConnection();
+    console.log('Connected');
   } catch (error) {
+    console.log('DB error');
     console.log(error);
   }
 };
