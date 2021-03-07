@@ -1,21 +1,25 @@
-import { Project } from 'entities';
+import { Projects } from 'entities';
 import { catchErrors } from 'errors';
-import { findEntityOrThrow, updateEntity } from 'utils/typeorm';
-import { issuePartial } from 'serializers/issues';
+import { createEntity, findEntities, updateEntity } from 'utils/typeorm';
 
-export const getProjectWithUsersAndIssues = catchErrors(async (req, res) => {
-  const project = await findEntityOrThrow(Project, req.currentUser.projectId, {
-    relations: ['users', 'issues'],
+export const getProjectsWithUsers = catchErrors(async (req, res) => {
+  console.log(req.currentUser.projectId);
+  const project = await findEntities(Projects, {
+    relations: ['users'],
   });
   res.respond({
     project: {
       ...project,
-      issues: project.issues.map(issuePartial),
     },
   });
 });
 
 export const update = catchErrors(async (req, res) => {
-  const project = await updateEntity(Project, req.currentUser.projectId, req.body);
+  const project = await updateEntity(Projects, req.currentUser.projectId, req.body);
+  res.respond({ project });
+});
+
+export const create = catchErrors(async (req, res) => {
+  const project = await createEntity(Projects, req.body);
   res.respond({ project });
 });

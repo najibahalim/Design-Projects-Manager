@@ -1,6 +1,7 @@
 import * as authentication from 'controllers/authentication';
 import * as comments from 'controllers/comments';
 import * as issues from 'controllers/issues';
+import * as project from 'controllers/project';
 import * as projects from 'controllers/projects';
 import * as test from 'controllers/test';
 import * as users from 'controllers/users';
@@ -25,8 +26,12 @@ export const attachPrivateRoutes = (app: any): void => {
   app.put('/issues/:issueId', issues.update);
   app.delete('/issues/:issueId', issues.remove);
 
-  app.get('/project', projects.getProjectWithUsersAndIssues);
-  app.put('/project', projects.update);
+  app.get('/project', project.getProjectWithUsersAndIssues);
+  app.put('/project', project.update);
+
+  app.get('/projects', projects.getProjectsWithUsers);
+  app.put('/projects', projects.update);
+  app.post('/projects', projects.create);
 
   app.get('/currentUser', users.getCurrentUser);
 };
