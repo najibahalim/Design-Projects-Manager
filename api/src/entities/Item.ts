@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
   OneToMany,
   BeforeUpdate,
   BeforeInsert,
@@ -12,30 +13,20 @@ import {
 } from 'typeorm';
 
 import is from 'utils/validation';
-import { IssueStatus, IssuePriority } from 'constants/issues';
-import { Comment } from '.';
+import { Comment, ItemType, Task } from '.';
 
 @Entity()
-class Projects extends BaseEntity {
+class Item extends BaseEntity {
   static validations = {
-    name: [is.required(), is.maxLength(200)],
-    status: [is.required(), is.oneOf(Object.values(IssueStatus))],
-    priority: [is.required(), is.oneOf(Object.values(IssuePriority))],
-    listPosition: is.required(),
-    reporterId: is.required(),
+    ItemID: [is.required()],
+    itemName: [is.required(), is.maxLength(200)]
   };
 
-  @Column('varchar')
-  name: string;
+  @PrimaryColumn('integer')
+  ItemID: number;
 
   @Column('varchar')
-  status: IssueStatus;
-
-  @Column('varchar')
-  priority: IssuePriority;
-
-  @Column('double precision')
-  listPosition: number;
+  itemName: string;
 
   @Column('text', { nullable: true })
   description: string | null;
@@ -43,20 +34,21 @@ class Projects extends BaseEntity {
   @Column('text', { nullable: true })
   descriptionText: string | null;
 
-  @Column('timestamp', { nullable: true })
-  committedDate: Date | null;
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  @Column('integer')
-  reporterId: number;
+  @ManyToOne(() => ItemType, type => type.taskList)
+  type: ItemType;
 
-  @PrimaryColumn('integer',{nullable: false})
-  projectNumber: number;
+  @OneToMany(
+    () => Task,
+    task => task.item,
+  )
+  tasks: Task[];
+
 
   @OneToMany(
     () => Comment,
@@ -73,4 +65,4 @@ class Projects extends BaseEntity {
   };
 }
 
-export default Projects;
+export default Item;

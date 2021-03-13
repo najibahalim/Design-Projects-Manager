@@ -31,29 +31,10 @@ export const Issue = styled.div`
 `;
 
 export const Title = styled.p`
-  padding-bottom: 1px;
+  padding-bottom: 11px;
   ${font.size(15)}
   @media (max-width: 1100px) {
     ${font.size(14.5)}
-  }
-`;
-
-export const Deadline = styled.span`
-  display: inline-block;
-  margin-top: 3px;
-  padding-left: 7px;
-  position: absolute;
-  ${font.size(12)}
-  @media (max-width: 1100px) {
-    ${font.size(11.5)}
-  }
-`;
-
-export const Desc = styled.p`
-  padding-bottom: 15px;
-  ${font.size(12)}
-  @media (max-width: 1100px) {
-    ${font.size(11.5)}
   }
 `;
 

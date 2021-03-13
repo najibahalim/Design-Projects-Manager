@@ -11,7 +11,7 @@ import { List, Title, IssuesCount, Issues } from './Styles';
 
 const propTypes = {
   status: PropTypes.string.isRequired,
-  project: PropTypes.object.isRequired,
+  projects: PropTypes.array.isRequired,
   filters: PropTypes.object.isRequired,
   currentUserId: PropTypes.number,
 };
@@ -20,10 +20,10 @@ const defaultProps = {
   currentUserId: null,
 };
 
-const ProjectBoardList = ({ status, project, filters, currentUserId }) => {
-  const filteredIssues = filterIssues(project.issues, filters, currentUserId);
+const ProjectBoardList = ({ status, projects, filters, currentUserId }) => {
+  const filteredIssues = filterIssues(projects, filters, currentUserId);
   const filteredListIssues = getSortedListIssues(filteredIssues, status);
-  const allListIssues = getSortedListIssues(project.issues, status);
+  const allListIssues = getSortedListIssues(projects, status);
 
   return (
     <Droppable key={status} droppableId={status}>
@@ -39,7 +39,7 @@ const ProjectBoardList = ({ status, project, filters, currentUserId }) => {
             data-testid={`board-list:${status}`}
           >
             {filteredListIssues.map((issue, index) => (
-              <Issue key={issue.id} projectUsers={project.users} issue={issue} index={index} />
+              <Issue key={issue.id} projectUsers={[]} issue={issue} index={index} />
             ))}
             {provided.placeholder}
           </Issues>

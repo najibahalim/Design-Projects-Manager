@@ -5,12 +5,9 @@ import { createEntity, findEntities, updateEntity } from 'utils/typeorm';
 export const getProjectsWithUsers = catchErrors(async (req, res) => {
   console.log(req.currentUser.projectId);
   const project = await findEntities(Projects, {
-    relations: ['users'],
   });
   res.respond({
-    project: {
-      ...project,
-    },
+    projects: project
   });
 });
 

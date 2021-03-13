@@ -1,47 +1,48 @@
 import React from 'react';
 import { Route, Redirect, useRouteMatch } from 'react-router-dom';
-
+import { Droppable } from 'react-beautiful-dnd';
+import { ProjectPage, Issues } from './Styles';
 import useApi from 'shared/hooks/api';
-import { updateArrayItemById } from 'shared/utils/javascript';
 import { PageLoader, PageError } from 'shared/components';
-import { ProjectPage } from './Styles';
-import Board from './Board';
-import Sidebar from './Sidebar';
+import Lists from './Lists';
+
 
 const Projects = () => {
-  const match = useRouteMatch();
-
-  const [{ data, error, setLocalData }, fetchProject] = useApi.get('/project');
-
+  const [{ data, error, setLocalData }, fetchProject] = useApi.get('/projects');
   if (!data) return <PageLoader />;
   if (error) return <PageError />;
 
-  const { project } = data;
+  const { projects } = data;
 
   const updateLocalProjectIssues = (issueId, updatedFields) => {
+    console.log(updatedFields);
     setLocalData(currentData => ({
-      project: {
-        ...currentData.project,
-        issues: updateArrayItemById(currentData.project.issues, issueId, updatedFields),
+      projects: {
+        ...currentData.projects,
       },
     }));
   };
 
   return (
     <ProjectPage>
-      <Sidebar project={project} />
-      <Route
-        path={`${match.path}/board`}
-        render={() => (
-          <Board
-            project={project}
-            fetchProject={fetchProject}
-            updateLocalProjectIssues={updateLocalProjectIssues}
-          />
-        )}
+      Projects
+
+      {/* {  projects.map((project, index) => (
+        <List project={project} index={index} key={index}>
+
+        </List>
+      ))} */}
+      <Lists
+        projects={projects}
+        filters={{
+          searchTerm: '',
+          userIds: [],
+          myOnly: false,
+          recent: false,
+        }}
+        updateLocalProjectIssues={updateLocalProjectIssues}
       />
 
-      {match.isExact && <Redirect to={`${match.url}/board`} />}
     </ProjectPage>
   );
 };

@@ -11,12 +11,12 @@ import List from './List';
 import { Lists } from './Styles';
 
 const propTypes = {
-  project: PropTypes.object.isRequired,
+  projects: PropTypes.array.isRequired,
   filters: PropTypes.object.isRequired,
   updateLocalProjectIssues: PropTypes.func.isRequired,
 };
 
-const ProjectBoardLists = ({ project, filters, updateLocalProjectIssues }) => {
+const ProjectBoardLists = ({ projects, filters, updateLocalProjectIssues }) => {
   const { currentUserId } = useCurrentUser();
 
   const handleIssueDrop = ({ draggableId, destination, source }) => {
@@ -24,12 +24,12 @@ const ProjectBoardLists = ({ project, filters, updateLocalProjectIssues }) => {
 
     const issueId = Number(draggableId);
 
-    api.optimisticUpdate(`/issues/${issueId}`, {
+    api.optimisticUpdate(`/view/${issueId}`, {
       updatedFields: {
         status: destination.droppableId,
-        listPosition: calculateIssueListPosition(project.issues, destination, source, issueId),
+        listPosition: calculateIssueListPosition(projects, destination, source, issueId),
       },
-      currentFields: project.issues.find(({ id }) => id === issueId),
+      currentFields: projects.find(({ projectNumber }) => projectNumber === issueId),
       setLocalData: fields => updateLocalProjectIssues(issueId, fields),
     });
   };
@@ -41,7 +41,7 @@ const ProjectBoardLists = ({ project, filters, updateLocalProjectIssues }) => {
           <List
             key={status}
             status={status}
-            project={project}
+            projects={projects}
             filters={filters}
             currentUserId={currentUserId}
           />

@@ -14,3 +14,9 @@ export const ProjectPage = styled.div`
     padding-left: ${paddingLeft - 20 - sizes.secondarySideBarWidth}px;
   }
 `;
+
+export const Issues = styled.div`
+  height: 100%;
+  padding: 0 5px;
+`;
+
