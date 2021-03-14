@@ -127,7 +127,6 @@ export const TaskTitle = styled.span`
 
 export const StyledIcon = styled(Icon)`
  float: right;
- color: ${props => props.color || 'blue'};
 `;
 
 export const CheckIcon = styled(Icon)`

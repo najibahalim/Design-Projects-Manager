@@ -106,11 +106,12 @@ const TaskMasterPage = (props) => {
         </AddButton>
       <Lists>
         <List>
-          <Title> Tasks ({taskList.length})</Title>
+          <Title> Tasks  (Total: {taskList.length})</Title>
           {taskList.map((task, index)=> {
-            return <TaskItem selected = { selectedTask.id === task.id} key={index} onClick={()=> selectTask(task)}>
+            const isSelected = selectedTask.id === task.id;
+            return <TaskItem selected={isSelected} key={index} onClick={()=> selectTask(task)}>
               <TaskTitle>{task.name} </TaskTitle>
-              <StyledIcon type="chevron-right" top={1} />
+              {isSelected ? <StyledIcon type="chevron-right" top={1} /> : <span/> }
             </TaskItem>
           })}
         </List>
@@ -153,8 +154,12 @@ const TaskMasterPage = (props) => {
             />
             <ModalSectionTitle> <CheckIcon type={"task"} /> CHECKLIST </ModalSectionTitle>
               <TitleTextarea
-                minRows={1}
-                placeholder="Task Checklist seperated by a line"
+                minRows={3}
+                placeholder={`Cheklist Item 1
+                
+Cheklist Item 2
+
+Cheklist Item 3`}
                 defaultValue={selectedTask.checklist && selectedTask.checklist.join('\n\n')}
                 ref={$checklistInputRef}
               />
