@@ -16,20 +16,20 @@ const propTypes = {
   updateLocalProjectIssues: PropTypes.func.isRequired,
 };
 
-const ProjectBoardLists = ({ projects, filters, updateLocalProjectIssues }) => {
+const ProjectList = ({ projects, filters, updateLocalProjectIssues }) => {
   const { currentUserId } = useCurrentUser();
 
   const handleIssueDrop = ({ draggableId, destination, source }) => {
     if (!isPositionChanged(source, destination)) return;
 
     const issueId = Number(draggableId);
-
-    api.optimisticUpdate(`/view/${issueId}`, {
+    api.optimisticUpdate(`/projects`, {
       updatedFields: {
         status: destination.droppableId,
+        id: issueId,
         listPosition: calculateIssueListPosition(projects, destination, source, issueId),
       },
-      currentFields: projects.find(({ projectNumber }) => projectNumber === issueId),
+      currentFields: projects.find(({ id }) => id === issueId),
       setLocalData: fields => updateLocalProjectIssues(issueId, fields),
     });
   };
@@ -92,6 +92,6 @@ const getAfterDropPrevNextIssue = (allIssues, destination, source, droppedIssueI
 const getSortedListIssues = (issues, status) =>
   issues.filter(issue => issue.status === status).sort((a, b) => a.listPosition - b.listPosition);
 
-ProjectBoardLists.propTypes = propTypes;
+ProjectList.propTypes = propTypes;
 
-export default ProjectBoardLists;
+export default ProjectList;

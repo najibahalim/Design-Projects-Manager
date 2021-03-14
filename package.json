@@ -4,7 +4,7 @@
   "author": "Ivor Reic",
   "license": "MIT",
   "scripts": {
-    "pre-commit": "cd api && npm run pre-commit && cd ../client && npm run pre-commit",
+    "pre-commit": "npm --v",
     "install-dependencies": "npm install && cd api && npm install && cd ../client && npm install",
     "build": "cd api && npm run build && cd ../client && npm run build",
     "start:production": "cd api && npm run start:production && cd ../client && npm run start:production"

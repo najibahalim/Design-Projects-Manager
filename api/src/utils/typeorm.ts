@@ -1,6 +1,6 @@
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 
-import { Project, User, Issue, Comment, Projects } from 'entities';
+import { Project, User, Issue, Comment, Projects, ItemType, Task, Item, TaskMaster } from 'entities';
 import { EntityNotFoundError, BadUserInputError } from 'errors';
 import { generateErrors } from 'utils/validation';
 
@@ -9,8 +9,12 @@ type EntityConstructor =
   | typeof User
   | typeof Issue
   | typeof Comment
-  | typeof Projects;
-type EntityInstance = Project | User | Issue | Comment | Projects;
+  | typeof Projects
+  | typeof ItemType
+  | typeof Task
+  | typeof Item
+  | typeof TaskMaster;
+type EntityInstance = Project | User | Issue | Comment | Projects | TaskMaster| Item | Task | ItemType;
 
 const entities: { [key: string]: EntityConstructor } = { Comment, Issue, Project, User, Projects };
 
@@ -23,6 +27,15 @@ export const findEntityOrThrow = async <T extends EntityConstructor>(
   if (!instance) {
     throw new EntityNotFoundError(Constructor.name);
   }
+  return instance;
+};
+
+export const findEntity = async <T extends EntityConstructor>(
+  Constructor: T,
+  id: number | string,
+  options?: FindOneOptions,
+): Promise<InstanceType<T>> => {
+  const instance = await Constructor.findOne(id, options);
   return instance;
 };
 
@@ -40,7 +53,7 @@ export const findEntities = async <T extends EntityConstructor>(
 export const validateAndSaveEntity = async <T extends EntityInstance>(instance: T): Promise<T> => {
   const Constructor = entities[instance.constructor.name];
 
-  if ('validations' in Constructor) {
+  if (Constructor && 'validations' in Constructor) {
     const errorFields = generateErrors(instance, Constructor.validations);
 
     if (Object.keys(errorFields).length > 0) {

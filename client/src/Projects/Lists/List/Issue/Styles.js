@@ -38,6 +38,24 @@ export const Title = styled.p`
   }
 `;
 
+export const Description = styled.p`
+  padding-left: 5px;
+  padding-bottom: 7px;
+  ${font.size(12)}
+  @media (max-width: 1100px) {
+    ${font.size(12.5)}
+  }
+`;
+
+export const CommittedDate = styled.p`
+  padding-left: 5px;
+  ${font.size(12)}
+  @media (max-width: 1100px) {
+    ${font.size(12.5)}
+  }
+`;
+
+
 export const Bottom = styled.div`
   display: flex;
   justify-content: space-between;

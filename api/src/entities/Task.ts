@@ -10,10 +10,14 @@ import {
 } from 'typeorm';
 import Item from './Item';
 
+import is from 'utils/validation';
 import { Comment } from '.';
 @Entity()
 class Task extends BaseEntity {
-
+  static validations = {
+    name: [is.required(), is.maxLength(200)],
+    estimatedDays: [is.required()],
+  };
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,13 +27,13 @@ class Task extends BaseEntity {
   @Column('integer')
   estimatedDays: string;
 
-  @Column('integer')
+  @Column('integer', {nullable: true})
   actualDays: string;
 
-  @Column('integer')
+  @Column('integer', { nullable: true })
   variance: string;
 
-  @Column("varchar", { array: true })
+  @Column("varchar", { array: true, nullable: true })
   checklist: string[];
 
   @CreateDateColumn({ type: 'timestamp' })

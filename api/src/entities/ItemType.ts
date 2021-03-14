@@ -5,15 +5,17 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
 
-import TaskMaster from './TaskMaster';
+import is from 'utils/validation';
 
 @Entity()
 class ItemType extends BaseEntity {
 
-
+  static validations = {
+    name: [is.required(), is.maxLength(200)],
+    estimatedDays: [is.required()],
+  };
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -25,9 +27,6 @@ class ItemType extends BaseEntity {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-
-  @OneToMany(() => TaskMaster, taskMaster => taskMaster.itemType)
-  taskList: TaskMaster[];
 }
 
 export default ItemType;

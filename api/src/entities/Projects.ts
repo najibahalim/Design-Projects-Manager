@@ -14,6 +14,7 @@ import {
 import is from 'utils/validation';
 import { IssueStatus, IssuePriority } from 'constants/issues';
 import { Comment } from '.';
+import Item from './Item';
 
 @Entity()
 class Projects extends BaseEntity {
@@ -56,7 +57,14 @@ class Projects extends BaseEntity {
   reporterId: number;
 
   @PrimaryColumn('integer',{nullable: false})
-  projectNumber: number;
+  id: number;
+
+  @OneToMany(
+    () => Item,
+    item => item.project,
+  )
+  items: Comment[];
+
 
   @OneToMany(
     () => Comment,

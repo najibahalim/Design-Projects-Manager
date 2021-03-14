@@ -3,6 +3,8 @@ import * as comments from 'controllers/comments';
 import * as issues from 'controllers/issues';
 import * as project from 'controllers/project';
 import * as projects from 'controllers/projects';
+import * as items from 'controllers/items';
+import * as tasksMaster from 'controllers/tasksMaster';
 import * as test from 'controllers/test';
 import * as users from 'controllers/users';
 
@@ -30,8 +32,15 @@ export const attachPrivateRoutes = (app: any): void => {
   app.put('/project', project.update);
 
   app.get('/projects', projects.getProjectsWithUsers);
+  app.get('/projects/:projectId', projects.getProjectWithId);
   app.put('/projects', projects.update);
   app.post('/projects', projects.create);
+
+  app.post('/item', items.create);
+
+  app.post('/tasksMaster', tasksMaster.create);
+  app.put('/tasksMaster', tasksMaster.update);
+  app.get('/tasksMaster', tasksMaster.getAllTasks);
 
   app.get('/currentUser', users.getCurrentUser);
 };

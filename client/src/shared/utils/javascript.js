@@ -21,5 +21,15 @@ export const updateArrayItemById = (arr, itemId, fields) => {
   return arrClone;
 };
 
+export const updateProjectsByid = (arr, itemId, fields) => {
+  const arrClone = [...arr];
+  const item = arrClone.find(({ id }) => id === itemId);
+  if (item) {
+    const itemIndex = arrClone.indexOf(item);
+    arrClone.splice(itemIndex, 1, { ...item, ...fields });
+  }
+  return arrClone;
+};
+
 export const sortByNewest = (items, sortField) =>
   items.sort((a, b) => -a[sortField].localeCompare(b[sortField]));

@@ -13,7 +13,8 @@ import {
 } from 'typeorm';
 
 import is from 'utils/validation';
-import { Comment, ItemType, Task } from '.';
+import { Comment, Task } from '.';
+import Projects from './Projects';
 
 @Entity()
 class Item extends BaseEntity {
@@ -40,8 +41,8 @@ class Item extends BaseEntity {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => ItemType, type => type.taskList)
-  type: ItemType;
+  @ManyToOne(() => Projects, project => project.items)
+  project: Projects;
 
   @OneToMany(
     () => Task,

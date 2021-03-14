@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Redirect, useRouteMatch } from 'react-router-dom';
 import { Droppable } from 'react-beautiful-dnd';
 import { ProjectPage, Issues } from './Styles';
+import { updateProjectsByid } from 'shared/utils/javascript';
 import useApi from 'shared/hooks/api';
 import { PageLoader, PageError } from 'shared/components';
 import Lists from './Lists';
@@ -15,23 +16,14 @@ const Projects = () => {
   const { projects } = data;
 
   const updateLocalProjectIssues = (issueId, updatedFields) => {
-    console.log(updatedFields);
     setLocalData(currentData => ({
-      projects: {
-        ...currentData.projects,
-      },
+      projects: updateProjectsByid(currentData.projects, issueId, updatedFields),
     }));
   };
 
   return (
     <ProjectPage>
       Projects
-
-      {/* {  projects.map((project, index) => (
-        <List project={project} index={index} key={index}>
-
-        </List>
-      ))} */}
       <Lists
         projects={projects}
         filters={{
