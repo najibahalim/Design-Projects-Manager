@@ -1,6 +1,6 @@
-import { Issue } from 'entities';
+import { Issue, Item, Projects } from 'entities';
 import { catchErrors } from 'errors';
-import { updateEntity, deleteEntity, createEntity, findEntityOrThrow } from 'utils/typeorm';
+import { deleteEntity, createEntity, findEntityOrThrow, validateAndSaveEntity } from 'utils/typeorm';
 
 export const getProjectIssues = catchErrors(async (req, res) => {
   const { projectId } = req.currentUser;
@@ -28,13 +28,24 @@ export const getIssueWithUsersAndComments = catchErrors(async (req, res) => {
 });
 
 export const create = catchErrors(async (req, res) => {
-  const item = await createEntity(Issue, { ...req.body });
+  const itemCreationBody: Item = new Item();
+  itemCreationBody.id = req.body.id,
+  itemCreationBody.itemName =  req.body.itemName,
+  itemCreationBody.description = req.body.description;
+  const project = await findEntityOrThrow(Projects, req.body.projectId);
+  itemCreationBody.project = project;
+  const item = await createEntity(Item, itemCreationBody);
   res.respond({ item });
 });
 
 export const update = catchErrors(async (req, res) => {
-  const issue = await updateEntity(Issue, req.params.issueId, req.body);
-  res.respond({ issue });
+  const itemCreationBody: Item = await findEntityOrThrow(Item, req.body.id);
+  itemCreationBody.itemName = req.body.itemName,
+  itemCreationBody.description = req.body.description;
+  const project = await findEntityOrThrow(Projects, req.body.projectId);
+  itemCreationBody.project = project;
+  const item = await validateAndSaveEntity(itemCreationBody);
+  res.respond({ item });
 });
 
 export const remove = catchErrors(async (req, res) => {

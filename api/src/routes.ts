@@ -42,5 +42,12 @@ export const attachPrivateRoutes = (app: any): void => {
   app.put('/tasksMaster', tasksMaster.update);
   app.get('/tasksMaster', tasksMaster.getAllTasks);
 
+  app.post('/items', items.create); //Add item to project
+  app.put('/items', items.update); // update item
+
+  app.post('/users', users.create); //Add Users
+  app.put('/users', users.update); // update Users
+  app.get('/users', users.getAllUsers); // get all
+
   app.get('/currentUser', users.getCurrentUser);
 };

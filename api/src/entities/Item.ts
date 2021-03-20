@@ -24,7 +24,7 @@ class Item extends BaseEntity {
   };
 
   @PrimaryColumn('integer')
-  ItemID: number;
+  id: number;
 
   @Column('varchar')
   itemName: string;

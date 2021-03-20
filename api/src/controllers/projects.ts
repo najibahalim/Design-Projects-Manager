@@ -3,7 +3,7 @@ import { catchErrors } from 'errors';
 import { createEntity, findEntities, updateEntity, findEntityOrThrow } from 'utils/typeorm';
 
 export const getProjectsWithUsers = catchErrors(async (req, res) => {
-  console.log(req.currentUser.projectId);
+  console.log(req.currentUser.id);
   const project = await findEntities(Projects, {
     order: {
       updatedAt: "DESC",
@@ -26,7 +26,9 @@ export const getProjectsWithUsers = catchErrors(async (req, res) => {
 
 export const getProjectWithId = catchErrors(async (req, res) => {
   console.log(req.params.projectId);
-  const project = await findEntityOrThrow(Projects, req.params.projectId, {});
+  const project = await findEntityOrThrow(Projects, req.params.projectId, {
+    relations: ['items']
+  });
   res.respond(project);
 });
 

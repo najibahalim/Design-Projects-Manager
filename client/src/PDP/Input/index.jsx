@@ -7,11 +7,11 @@ import { is, generateErrors } from 'shared/utils/validation';
 import { TitleTextarea, ErrorText } from './Styles';
 
 const propTypes = {
-  issue: PropTypes.object.isRequired,
-  updateIssue: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  updateValue: PropTypes.func.isRequired,
 };
 
-const ProjectBoardIssueDetailsTitle = ({ issue, updateIssue }) => {
+const InputComponent = ({ value, updateValue }) => {
   const $titleInputRef = useRef();
   const [error, setError] = useState(null);
 
@@ -19,14 +19,14 @@ const ProjectBoardIssueDetailsTitle = ({ issue, updateIssue }) => {
     setError(null);
 
     const title = $titleInputRef.current.value;
-    if (title === issue.title) return;
+    if (title === value) return;
 
-    const errors = generateErrors({ title }, { title: [is.required(), is.maxLength(200)] });
+    const errors = generateErrors({ value }, { value: [is.required(), is.maxLength(200)] });
 
     if (errors.title) {
       setError(errors.title);
     } else {
-      updateIssue({ title });
+      updateValue({ title });
     }
   };
 
@@ -35,7 +35,7 @@ const ProjectBoardIssueDetailsTitle = ({ issue, updateIssue }) => {
       <TitleTextarea
         minRows={1}
         placeholder="Short summary"
-        defaultValue={issue.title}
+        defaultValue={value}
         ref={$titleInputRef}
         onBlur={handleTitleChange}
         onKeyDown={event => {
@@ -49,6 +49,6 @@ const ProjectBoardIssueDetailsTitle = ({ issue, updateIssue }) => {
   );
 };
 
-ProjectBoardIssueDetailsTitle.propTypes = propTypes;
+InputComponent.propTypes = propTypes;
 
-export default ProjectBoardIssueDetailsTitle;
+export default InputComponent;

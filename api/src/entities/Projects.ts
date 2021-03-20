@@ -63,7 +63,7 @@ class Projects extends BaseEntity {
     () => Item,
     item => item.project,
   )
-  items: Comment[];
+  items: Item[];
 
 
   @OneToMany(
