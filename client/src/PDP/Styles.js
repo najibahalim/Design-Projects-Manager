@@ -224,3 +224,8 @@ export const SectionTitle = styled.span`
   ${font.size(12.5)}
   ${font.bold}
 `;
+
+export const ScrollableDiv = styled.div`
+  ${mixin.scrollableY}
+  ${mixin.customScrollbar()}
+`

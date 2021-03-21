@@ -4,6 +4,7 @@ import * as issues from 'controllers/issues';
 import * as project from 'controllers/project';
 import * as projects from 'controllers/projects';
 import * as items from 'controllers/items';
+import * as tasks from 'controllers/tasks';
 import * as tasksMaster from 'controllers/tasksMaster';
 import * as test from 'controllers/test';
 import * as users from 'controllers/users';
@@ -44,6 +45,9 @@ export const attachPrivateRoutes = (app: any): void => {
 
   app.post('/items', items.create); //Add item to project
   app.put('/items', items.update); // update item
+
+  app.post('/tasks', tasks.create); //Add item to project
+  app.put('/tasks', tasks.update); // update item
 
   app.post('/users', users.create); //Add Users
   app.put('/users', users.update); // update Users

@@ -14,7 +14,10 @@ import Input from './Input';
 import Comments from './Comments';
 import TaskSelect from './TaskSelect';
 import Status from './Status';
-import AssigneesReporter from './AssigneesReporter';
+
+
+
+import Assignee from './Assignee';
 import Priority from './Priority';
 import EstimateTracking from './EstimateTracking';
 import Dates from './Dates';
@@ -49,11 +52,14 @@ const ProjectDetailsPage = (props) => {
   const [selectedItem, selectItem] = useState({});
   const [addingNewTask, addNewTask] = useState(false);
   const [selectedTask, selectNewTask] = useState({});
-
+  const $nameInputRef = useRef();
+  const $checklistInputRef = useRef();
+  const $estimatedDaysRef = useRef();
   const { match: { params } } = props;
 
   const [{ data, error, setLocalData }, fetchProject] = useApi.get(`/projects/${params.projectId}`);
   const taskApiCallData = useApi.get(`/tasksMaster`);
+  const userApiCall = useApi.get(`/users`);
 
 
   if (!data || !taskApiCallData[0].data) return <Loader />;
@@ -61,6 +67,7 @@ const ProjectDetailsPage = (props) => {
 
   const project = data;
   const taskList = taskApiCallData[0].data;
+  const users = userApiCall[0].data;
 
   const updateLocalIssueDetails = fields =>
     setLocalData(currentData => ({ project: { ...currentData.projects, ...fields } }));
@@ -82,6 +89,20 @@ const ProjectDetailsPage = (props) => {
     selectNewTask(newTask);
 
   }
+
+  const updateTaskPriority = (newPriority) => {
+    console.log("New Priority", newPriority);
+    selectedTask.priority = newPriority;
+  }
+  const updateTaskStatus = (newStatus) => {
+    selectedTask.status = newStatus;
+    console.log("New Status", newStatus);
+  }
+  const updateTaskUser = (newUserId) => {
+    selectedTask.userId = newUserId;
+    console.log("New USer id", newUserId);
+  }
+
   return (
       <ProjectPage>
       <FormHeading>PROJECT: {project.name}</FormHeading>
@@ -101,7 +122,7 @@ const ProjectDetailsPage = (props) => {
             return <TaskItem selected={isSelected} key={index} onClick={() => selectItem(item)} >
               <TaskTitle>{item.itemName} </TaskTitle>
               <StyledIcon type="chevron-right" top={1} />
-              <ItemInfo>5 Tasks</ItemInfo>
+              <ItemInfo>{item.tasks.length} Task/(s)</ItemInfo>
               <ItemInfo align={'right'} color={'yellowgreen'}>5 Done</ItemInfo>
             </TaskItem> 
           })}
@@ -109,12 +130,23 @@ const ProjectDetailsPage = (props) => {
           
 
           </List>
+
         <List>
           {/* Item Details */}
           {selectedItem.id ? <Fragment>
             <SectionTitle>{selectedItem.itemName}</SectionTitle>
           
-            <SectionTitle>Tasks:    <Button style={{ marginLeft: '30%' }} icon="plus" variant="primary" onClick={() => { selectNewTask(taskList[0]); addNewTask(true) }}>Add New Task </Button></SectionTitle>
+            <SectionTitle>Tasks:    <Button style={{ marginLeft: '20%' }} icon="plus" variant="primary" onClick={() => { selectNewTask(taskList[0]); addNewTask(true) }}>Add New Task </Button></SectionTitle>
+
+            {selectedItem.tasks.map((task, index) => {
+              const isSelected = selectedTask.id === task.id;
+              return <TaskItem selected={isSelected} key={index} onClick={() => selectTask(task)} >
+                <TaskTitle>{task.name} </TaskTitle>
+                <StyledIcon type="chevron-right" top={1} />
+                <ItemInfo>STATUS: {task.status}</ItemInfo>
+                <ItemInfo align={'right'} color={'yellowgreen'}>Estimated Days: {task.estimatedDays}</ItemInfo>
+              </TaskItem>
+            })}
            
           </Fragment>: <TitleText>Select an ITEM to view Tasks</TitleText>}
 
@@ -122,7 +154,7 @@ const ProjectDetailsPage = (props) => {
         </List>
         <List>
           {/* Task details */}
-
+            {JSON.stringify(users)}
         </List>
         </Lists>
         {/* Add task for Item */}
@@ -147,8 +179,21 @@ const ProjectDetailsPage = (props) => {
             <br/>
             <TaskSelect taskList={taskList} selectTask={taskSelectedWhileAdding} selectedTask={selectedTask}/>
             <Icon type="chevron-down" top={1} />
+            <br/>
+            <Assignee task={selectedTask} updateTaskUser={updateTaskUser} projectUsers={users}/>
+            <br />
+            <Priority task={selectedTask} updateTaskPriority={updateTaskPriority} />
+            <br />
+            <Status task={selectedTask} updateTaskStatus={updateTaskStatus}/>
+            <br/>
+            <SectionTitle>Original Estimate (Days)</SectionTitle>
+            <ModalInput
+              ref={$estimatedDaysRef}
+              defaultValue={selectedTask.estimatedDays}
+              placeholder="Days"
 
-
+            />
+            <br/>
       
             <ModalButton variant="primary">
               Done
@@ -159,39 +204,7 @@ const ProjectDetailsPage = (props) => {
         )}
       />
       </ProjectPage>
-
-
-    // <Fragment>
-    //   <TopActions>
-    //     <Type issue={project} updateIssue={updateIssue} />
-    //     <TopActionsRight>
-    //       <AboutTooltip
-    //         renderLink={linkProps => (
-    //           <Button icon="feedback" variant="empty" {...linkProps}>
-    //             Give feedback
-    //           </Button>
-    //         )}
-    //       />
-    //       <CopyLinkButton variant="empty" />
-    //       <Delete issue={project} fetchProject={fetchProject} modalClose={modalClose} />
-    //       <Button icon="close" iconSize={24} variant="empty" onClick={modalClose} />
-    //     </TopActionsRight>
-    //   </TopActions>
-    //   <Content>
-    //     <Left>
-    //       <Title issue={project} updateIssue={updateIssue} />
-    //       <Description issue={project} updateIssue={updateIssue} />
-    //       <Comments issue={project} fetchIssue={fetchIssue} />
-    //     </Left>
-    //     <Right>
-    //       <Status issue={project} updateIssue={updateIssue} />
-    //       <AssigneesReporter issue={project} updateIssue={updateIssue} projectUsers={projectUsers} />
-    //       <Priority issue={project} updateIssue={updateIssue} />
-    //       <EstimateTracking issue={project} updateIssue={updateIssue} />
-    //       <Dates issue={project} />
-    //     </Right>
-    //   </Content>
-    // </Fragment>
+  
   );
 };
 

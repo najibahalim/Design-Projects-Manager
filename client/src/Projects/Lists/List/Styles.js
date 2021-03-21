@@ -7,9 +7,12 @@ export const List = styled.div`
   flex-direction: column;
   margin: 0 5px;
   min-height: 400px;
-  width: 25%;
+  width: 35%;
   border-radius: 3px;
   background: ${color.backgroundLightest};
+  ${mixin.scrollableY}
+  ${mixin.customScrollbar()}
+
 `;
 
 export const Title = styled.div`

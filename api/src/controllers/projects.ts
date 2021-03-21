@@ -27,7 +27,7 @@ export const getProjectsWithUsers = catchErrors(async (req, res) => {
 export const getProjectWithId = catchErrors(async (req, res) => {
   console.log(req.params.projectId);
   const project = await findEntityOrThrow(Projects, req.params.projectId, {
-    relations: ['items']
+    relations: ['items', 'items.tasks']
   });
   res.respond(project);
 });

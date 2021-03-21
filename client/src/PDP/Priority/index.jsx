@@ -8,24 +8,24 @@ import { SectionTitle } from '../Styles';
 import { Priority, Label } from './Styles';
 
 const propTypes = {
-  issue: PropTypes.object.isRequired,
-  updateIssue: PropTypes.func.isRequired,
+  task: PropTypes.object.isRequired,
+  updateTaskPriority: PropTypes.func.isRequired,
 };
 
-const ProjectBoardIssueDetailsPriority = ({ issue, updateIssue }) => (
+const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority }) => (
   <Fragment>
-    <SectionTitle>Priority</SectionTitle>
+    <SectionTitle>Priority:</SectionTitle>
     <Select
       variant="empty"
       withClearValue={false}
       dropdownWidth={343}
       name="priority"
-      value={issue.priority}
+      value={task.priority}
       options={Object.values(IssuePriority).map(priority => ({
         value: priority,
         label: IssuePriorityCopy[priority],
       }))}
-      onChange={priority => updateIssue({ priority })}
+      onChange={priority => updateTaskPriority(priority)}
       renderValue={({ value: priority }) => renderPriorityItem(priority, true)}
       renderOption={({ value: priority }) => renderPriorityItem(priority)}
     />

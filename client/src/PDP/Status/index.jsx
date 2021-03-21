@@ -8,24 +8,24 @@ import { SectionTitle } from '../Styles';
 import { Status } from './Styles';
 
 const propTypes = {
-  issue: PropTypes.object.isRequired,
-  updateIssue: PropTypes.func.isRequired,
+  task: PropTypes.object.isRequired,
+  updateTaskStatus: PropTypes.func.isRequired,
 };
 
-const ProjectBoardIssueDetailsStatus = ({ issue, updateIssue }) => (
+const ProjectBoardIssueDetailsStatus = ({ task, updateTaskStatus }) => (
   <Fragment>
-    <SectionTitle>Status</SectionTitle>
+    <SectionTitle>Status: </SectionTitle>
     <Select
       variant="empty"
       dropdownWidth={343}
       withClearValue={false}
       name="status"
-      value={issue.status}
+      value={task.status}
       options={Object.values(IssueStatus).map(status => ({
         value: status,
         label: IssueStatusCopy[status],
       }))}
-      onChange={status => updateIssue({ status })}
+      onChange={status => updateTaskStatus(status)}
       renderValue={({ value: status }) => (
         <Status isValue color={status}>
           <div>{IssueStatusCopy[status]}</div>

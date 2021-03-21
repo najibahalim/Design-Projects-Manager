@@ -7,6 +7,8 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import Item from './Item';
 
@@ -38,13 +40,13 @@ class Task extends BaseEntity {
   priority: IssuePriority;
 
   @Column('integer')
-  estimatedDays: string;
+  estimatedDays: number;
 
   @Column('integer', {nullable: true})
-  actualDays: string;
+  actualDays: number;
 
   @Column('integer', { nullable: true })
-  variance: string;
+  variance: number;
 
   @Column("simple-array", { nullable: true })
   checklist: string[];
@@ -70,6 +72,12 @@ class Task extends BaseEntity {
   )
   comments: Comment[];
   
+  @BeforeInsert()
+  @BeforeUpdate()
+  setVariance = (): void => {
+    const diff = (this.actualDays ?? 0) - this.estimatedDays;
+    this.variance = diff > 0 ? diff : 0;
+  };
 }
 
 export default Task;

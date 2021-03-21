@@ -10,9 +10,9 @@ export const getAllUsers = catchErrors(async (req, res) => {
       updatedAt: "DESC",
     }, relations: ['tasks']
   });
-  res.respond({
+  res.respond(
     users
-  });
+  );
 });
 
 export const update = catchErrors(async (req, res) => {
