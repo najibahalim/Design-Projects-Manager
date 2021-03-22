@@ -19,7 +19,7 @@ const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers }
 
   return (
     <Fragment>
-      <SectionTitle>Assignee</SectionTitle>
+      <SectionTitle>Assignee: </SectionTitle>
       <Select
         variant="empty"
         dropdownWidth={343}
@@ -43,7 +43,7 @@ const renderUser = (user, isSelectValue, removeOptionValue) => (
     onClick={() => removeOptionValue && removeOptionValue()}
   >
     <Avatar name={user.name} size={24} />
-    <Username>{user.name}</Username>
+    <Username>{user.name} ({user.tasks.length}) </Username>
     {removeOptionValue && <Icon type="close" top={1} />}
   </User>
 );

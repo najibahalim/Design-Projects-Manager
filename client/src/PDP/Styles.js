@@ -217,8 +217,7 @@ export const TopActionsRight = styled.div`
 `;
 
 export const SectionTitle = styled.span`
-  margin: 24px 0 5px;
-  margin-left: 20px;
+  margin: 24px;
   text-transform: uppercase;
   color: ${color.textMedium};
   ${font.size(12.5)}

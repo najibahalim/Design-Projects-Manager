@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ProjectPage } from '../Projects/Styles';
 import api from 'shared/utils/api';
 import useApi from 'shared/hooks/api';
-import { PageError, CopyLinkButton, Button, AboutTooltip } from 'shared/components';
+import { PageError, CopyLinkButton, Button, AboutTooltip, IssuePriorityIcon } from 'shared/components';
 import { List, Title,IssuesCount, Issues } from '../Projects/Lists/List/Styles';
 import { Lists } from '../Projects/Lists/Styles';
 import Loader from './Loader';
@@ -85,23 +85,63 @@ const ProjectDetailsPage = (props) => {
 
   const taskSelectedWhileAdding = (taskId) => {
     const newTask = taskList.find(task => task.id === taskId);
-    console.log("New Task Selected" , newTask);
+    newTask.taskMasterId = newTask.id;
+    newTask.id = 9999;
     selectNewTask(newTask);
 
   }
 
   const updateTaskPriority = (newPriority) => {
     console.log("New Priority", newPriority);
-    selectedTask.priority = newPriority;
+    const newTask = selectedTask;
+    newTask.priority = newPriority;
+    selectNewTask(newTask);
+
   }
   const updateTaskStatus = (newStatus) => {
-    selectedTask.status = newStatus;
+    const newTask = selectedTask;
+    newTask.status = newStatus;
+    selectNewTask(newTask);
     console.log("New Status", newStatus);
   }
   const updateTaskUser = (newUserId) => {
-    selectedTask.userId = newUserId;
+    const newTask = selectedTask;
+    newTask.userId = newUserId;
+    selectNewTask(newTask);
     console.log("New USer id", newUserId);
   }
+  const addNewTaskLocally = fields => {
+    console.log("addNewTask")
+    console.log(fields);
+    setLocalData(currentData => {
+      console.log("CurrentData", currentData);
+      return currentData;
+    });
+
+
+  }
+  const addNewTaskCall = () => {
+    const newTaskFields = {
+      name: selectedTask.name,
+      status: selectedTask.status,
+      priority:Number(selectedTask.priority),
+      estimatedDays: Number($estimatedDaysRef.current.value),
+      checklist: selectedTask.checklist,
+      taskMasterId: selectedTask.taskMasterId,
+      itemId: selectedItem.id,
+      userId: selectedTask.userId,
+     
+    }
+    console.log(newTaskFields)
+    api.optimisticAdd(`/tasks`, {
+      updatedFields: newTaskFields,
+      currentFields: selectedTask,
+      setLocalData: fields => {
+        addNewTaskLocally(fields);
+      },
+    });
+    
+  };
 
   return (
       <ProjectPage>
@@ -136,15 +176,15 @@ const ProjectDetailsPage = (props) => {
           {selectedItem.id ? <Fragment>
             <SectionTitle>{selectedItem.itemName}</SectionTitle>
           
-            <SectionTitle>Tasks:    <Button style={{ marginLeft: '20%' }} icon="plus" variant="primary" onClick={() => { selectNewTask(taskList[0]); addNewTask(true) }}>Add New Task </Button></SectionTitle>
+            <SectionTitle>Tasks:    <Button style={{ marginLeft: '20%' }} icon="plus" variant="primary" onClick={() => { selectNewTask({taskMasterId: taskList[0].id, ...taskList[0]}); addNewTask(true) }}>Add New Task </Button></SectionTitle>
 
             {selectedItem.tasks.map((task, index) => {
               const isSelected = selectedTask.id === task.id;
               return <TaskItem selected={isSelected} key={index} onClick={() => selectTask(task)} >
                 <TaskTitle>{task.name} </TaskTitle>
                 <StyledIcon type="chevron-right" top={1} />
-                <ItemInfo>STATUS: {task.status}</ItemInfo>
-                <ItemInfo align={'right'} color={'yellowgreen'}>Estimated Days: {task.estimatedDays}</ItemInfo>
+                <TitleText><ItemInfo>{task.status} </ItemInfo></TitleText>
+                <ItemInfo align={'right'} color={'yellowgreen'}> <IssuePriorityIcon priority={task.priority} />  3 Days Remaining</ItemInfo>
               </TaskItem>
             })}
            
@@ -179,12 +219,17 @@ const ProjectDetailsPage = (props) => {
             <br/>
             <TaskSelect taskList={taskList} selectTask={taskSelectedWhileAdding} selectedTask={selectedTask}/>
             <Icon type="chevron-down" top={1} />
+            <TitleText> {selectedTask.checklist.length} Checklist Items</TitleText>
+            <br/>
             <br/>
             <Assignee task={selectedTask} updateTaskUser={updateTaskUser} projectUsers={users}/>
             <br />
+            <br />
             <Priority task={selectedTask} updateTaskPriority={updateTaskPriority} />
             <br />
+            <br />
             <Status task={selectedTask} updateTaskStatus={updateTaskStatus}/>
+            <br/>
             <br/>
             <SectionTitle>Original Estimate (Days)</SectionTitle>
             <ModalInput
@@ -194,8 +239,9 @@ const ProjectDetailsPage = (props) => {
 
             />
             <br/>
+            <br/>
       
-            <ModalButton variant="primary">
+            <ModalButton variant="primary" onClick={addNewTaskCall}>
               Done
             </ModalButton>
 
