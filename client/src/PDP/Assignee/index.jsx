@@ -25,7 +25,7 @@ const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers }
         dropdownWidth={343}
         withClearValue={false}
         name="assignee"
-        value={task.userId}
+        value={task.userId || task.assigneeId}
         options={userOptions}
         onChange={userId => updateTaskUser(userId)}
         renderValue={({ value: userId }) => renderUser(getUserById(userId), true)}

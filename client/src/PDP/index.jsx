@@ -93,7 +93,6 @@ const ProjectDetailsPage = (props) => {
   }
 
   const updateTaskPriority = (newPriority) => {
-    console.log("New Priority", newPriority);
     const newTask = selectedTask;
     newTask.priority = newPriority;
     selectNewTask(newTask);
@@ -103,13 +102,11 @@ const ProjectDetailsPage = (props) => {
     const newTask = selectedTask;
     newTask.status = newStatus;
     selectNewTask(newTask);
-    console.log("New Status", newStatus);
   }
   const updateTaskUser = (newUserId) => {
     const newTask = selectedTask;
     newTask.userId = newUserId;
     selectNewTask(newTask);
-    console.log("New USer id", newUserId);
   }
   const addNewTaskLocally = fields => {
     setLocalData(currentData => {
@@ -180,13 +177,13 @@ const ProjectDetailsPage = (props) => {
         <List>
           {/* Item Details */}
           {selectedItem.id ? <Fragment>
-            <SectionTitle>{selectedItem.itemName}</SectionTitle>
+            <FormHeading>{selectedItem.itemName}</FormHeading>
           
             <SectionTitle>Tasks:    <Button style={{ marginLeft: '20%' }} icon="plus" variant="primary" onClick={() => { selectNewTask({taskMasterId: taskList[0].id, ...taskList[0]}); addNewTask(true) }}>Add New Task </Button></SectionTitle>
 
             {selectedItem.tasks.map((task, index) => {
               const isSelected = selectedTask.id === task.id;
-              return <TaskItem selected={isSelected} key={index} onClick={() => selectTask(task)} >
+              return <TaskItem selected={isSelected} key={index} onClick={() => selectNewTask(task)} >
                 <TaskTitle>{task.name} </TaskTitle>
                 <StyledIcon type="chevron-right" top={1} />
                 <ItemInfo uppercase={true}>{task.status} </ItemInfo>
@@ -200,7 +197,20 @@ const ProjectDetailsPage = (props) => {
         </List>
         <List>
           {/* Task details */}
-           
+           {selectedTask.id ? <>
+            <FormHeading>{selectedTask.name}</FormHeading>
+            <Assignee task={selectedTask} updateTaskUser={updateTaskUser} projectUsers={users} />
+
+            <SectionTitle>Started On:</SectionTitle>
+            <Status task={selectedTask} updateTaskStatus={updateTaskStatus} />
+            <SectionTitle>Estimated Days:</SectionTitle>
+            <Input value={selectedTask.estimatedDays.toString()} updateValue={updateFunction}></Input>
+            <SectionTitle>Actual Days:</SectionTitle>
+            <Input value={selectedTask.actualDays ? selectedTask.actualDays.toString(): ''} updateValue={updateFunction}></Input>
+            <SectionTitle>Variance: <TitleText>{selectedTask.variance}</TitleText></SectionTitle>
+            <SectionTitle>Check List:</SectionTitle>
+            <SectionTitle>Comments:</SectionTitle>
+           </> : <></>}
         </List>
         </Lists>
         {/* Add task for Item */}

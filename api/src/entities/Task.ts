@@ -9,6 +9,7 @@ import {
   OneToMany,
   BeforeInsert,
   BeforeUpdate,
+  RelationId,
 } from 'typeorm';
 import Item from './Item';
 
@@ -65,7 +66,9 @@ class Task extends BaseEntity {
 
   @ManyToOne(() => Users, user => user.tasks)
   assignee: Users;
-
+  @RelationId((task: Task) => task.assignee)
+  assigneeId: number;
+  
   @OneToMany(
     () => Comment,
     comment => comment.issue,

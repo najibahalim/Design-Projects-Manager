@@ -218,12 +218,15 @@ export const TopActionsRight = styled.div`
 `;
 
 export const SectionTitle = styled.span`
-  margin: 24px;
+  margin-right: 24px;
+  margin-left: 24px;
+  margin-top: 24px;
   text-transform: uppercase;
   color: ${color.textMedium};
   ${font.size(12.5)}
   ${font.bold}
 `;
+
 
 export const ScrollableDiv = styled.div`
   ${mixin.scrollableY}
