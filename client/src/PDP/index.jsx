@@ -2,6 +2,7 @@ import React, { Fragment, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { ProjectPage } from '../Projects/Styles';
 import api from 'shared/utils/api';
+import toast from 'shared/utils/toast';
 import useApi from 'shared/hooks/api';
 import { PageError, CopyLinkButton, Button, AboutTooltip, IssuePriorityIcon } from 'shared/components';
 import { List, Title,IssuesCount, Issues } from '../Projects/Lists/List/Styles';
@@ -111,16 +112,15 @@ const ProjectDetailsPage = (props) => {
     console.log("New USer id", newUserId);
   }
   const addNewTaskLocally = fields => {
-    console.log("addNewTask")
-    console.log(fields);
     setLocalData(currentData => {
-      console.log("CurrentData", currentData);
+      if(fields.task && fields.task.item) {
+        const itemOfTaskAdded = currentData.items.find((item) => item.id === fields.task.item.id);
+        itemOfTaskAdded.tasks.push(fields.task);
+      }
       return currentData;
     });
-
-
   }
-  const addNewTaskCall = () => {
+   const addNewTaskCall = async () => {
     const newTaskFields = {
       name: selectedTask.name,
       status: selectedTask.status,
@@ -131,15 +131,21 @@ const ProjectDetailsPage = (props) => {
       itemId: selectedItem.id,
       userId: selectedTask.userId,
      
+    };
+    try {
+      addNewTask('working');
+      await api.optimisticAdd(`/tasks`, {
+        updatedFields: newTaskFields,
+        currentFields: selectedTask,
+        setLocalData: fields => {
+          addNewTaskLocally(fields);
+        },
+      });
+      await userApiCall[1]();
+      addNewTask(false);
+    } catch(err) {
+      toast.error(err);
     }
-    console.log(newTaskFields)
-    api.optimisticAdd(`/tasks`, {
-      updatedFields: newTaskFields,
-      currentFields: selectedTask,
-      setLocalData: fields => {
-        addNewTaskLocally(fields);
-      },
-    });
     
   };
 
@@ -183,8 +189,8 @@ const ProjectDetailsPage = (props) => {
               return <TaskItem selected={isSelected} key={index} onClick={() => selectTask(task)} >
                 <TaskTitle>{task.name} </TaskTitle>
                 <StyledIcon type="chevron-right" top={1} />
-                <TitleText><ItemInfo>{task.status} </ItemInfo></TitleText>
-                <ItemInfo align={'right'} color={'yellowgreen'}> <IssuePriorityIcon priority={task.priority} />  3 Days Remaining</ItemInfo>
+                <ItemInfo uppercase={true}>{task.status} </ItemInfo>
+                <ItemInfo align={'right'} color={'yellowgreen'}> <IssuePriorityIcon top={3} priority={task.priority.toString()} />  3 Days Remaining</ItemInfo>
               </TaskItem>
             })}
            
@@ -194,12 +200,12 @@ const ProjectDetailsPage = (props) => {
         </List>
         <List>
           {/* Task details */}
-            {JSON.stringify(users)}
+           
         </List>
         </Lists>
         {/* Add task for Item */}
       <Modal
-        isOpen={addingNewTask}
+        isOpen={addingNewTask === true}
         testid="modal:new-task"
         width={520}
         withCloseIcon={false}
@@ -241,7 +247,7 @@ const ProjectDetailsPage = (props) => {
             <br/>
             <br/>
       
-            <ModalButton variant="primary" onClick={addNewTaskCall}>
+            <ModalButton variant="primary" isWorking={addingNewTask === "working"} onClick={addNewTaskCall}>
               Done
             </ModalButton>
 

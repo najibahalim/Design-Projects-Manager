@@ -140,6 +140,7 @@ export const ItemInfo = styled.div`
   display: inline-block;
   text-align: ${props => props.align || 'left'};
   color: ${props => props.color || 'royalblue'};
+  text-transform: ${props => props.uppercase ? 'uppercase' :'none'};
   ${font.size(15)}
   ${font.regular}
   @media (max-width: 1100px) {
