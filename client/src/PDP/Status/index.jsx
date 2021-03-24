@@ -10,14 +10,15 @@ import { Status } from './Styles';
 const propTypes = {
   task: PropTypes.object.isRequired,
   updateTaskStatus: PropTypes.func.isRequired,
+  width: PropTypes.number,
 };
 
-const ProjectBoardIssueDetailsStatus = ({ task, updateTaskStatus }) => (
+const ProjectBoardIssueDetailsStatus = ({ task, updateTaskStatus, width }) => (
   <Fragment>
     <SectionTitle>Status: </SectionTitle>
     <Select
       variant="empty"
-      dropdownWidth={343}
+      dropdownWidth={width || 343}
       withClearValue={false}
       name="status"
       value={task.status}

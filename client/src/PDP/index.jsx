@@ -41,7 +41,8 @@ import {
   AddButton,
   EditButton,
   ModalButton,
-  ModalInput
+  ModalInput,
+  TaskInfo
 } from './Styles';
 
 const updateFunction = (arg1, arg2) => {
@@ -179,7 +180,7 @@ const ProjectDetailsPage = (props) => {
           {selectedItem.id ? <Fragment>
             <FormHeading>{selectedItem.itemName}</FormHeading>
           
-            <SectionTitle>Tasks:    <Button style={{ marginLeft: '20%' }} icon="plus" variant="primary" onClick={() => { selectNewTask({taskMasterId: taskList[0].id, ...taskList[0]}); addNewTask(true) }}>Add New Task </Button></SectionTitle>
+            <SectionTitle>Tasks:    <Button style={{ marginLeft: '20%' }} icon="plus" variant="primary" onClick={() => { selectNewTask({taskMasterId: taskList[0].id, ...taskList[0]}); addNewTask(true) }}>Add</Button></SectionTitle>
 
             {selectedItem.tasks.map((task, index) => {
               const isSelected = selectedTask.id === task.id;
@@ -197,20 +198,31 @@ const ProjectDetailsPage = (props) => {
         </List>
         <List>
           {/* Task details */}
-           {selectedTask.id ? <>
+          {selectedTask.id ? <TaskInfo>
             <FormHeading>{selectedTask.name}</FormHeading>
-            <Assignee task={selectedTask} updateTaskUser={updateTaskUser} projectUsers={users} />
-
+            <Assignee task={selectedTask} width={150} updateTaskUser={updateTaskUser} projectUsers={users} />
+            <br /> <br />
+            <Priority task={selectedTask} width={150} updateTaskPriority={updateTaskPriority} />
+            <br /> <br />
             <SectionTitle>Started On:</SectionTitle>
-            <Status task={selectedTask} updateTaskStatus={updateTaskStatus} />
+            <br /> <br />
+            <Status task={selectedTask} width={200} updateTaskStatus={updateTaskStatus} />
+            <br /> <br />
             <SectionTitle>Estimated Days:</SectionTitle>
             <Input value={selectedTask.estimatedDays.toString()} updateValue={updateFunction}></Input>
+            <br /> <br />
             <SectionTitle>Actual Days:</SectionTitle>
-            <Input value={selectedTask.actualDays ? selectedTask.actualDays.toString(): ''} updateValue={updateFunction}></Input>
+            <Input value={selectedTask.actualDays ? selectedTask.actualDays.toString(): '0'} updateValue={updateFunction}></Input>
+            <br /> <br />
             <SectionTitle>Variance: <TitleText>{selectedTask.variance}</TitleText></SectionTitle>
-            <SectionTitle>Check List:</SectionTitle>
+            <br /> <br />
+            <SectionTitle>Check List:</SectionTitle> <br /> <br />
+            {selectedTask.checklist && selectedTask.checklist.map((listItem, index) => {
+              return <TaskTitle style={{ marginLeft: '20px' }} key={index}> <CheckIcon type={"task"} /> {listItem} </TaskTitle>
+            })}
+            <br /> <br />
             <SectionTitle>Comments:</SectionTitle>
-           </> : <></>}
+          </TaskInfo> : <></>}
         </List>
         </Lists>
         {/* Add task for Item */}

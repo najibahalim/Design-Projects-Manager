@@ -4,7 +4,7 @@ import { color, font } from 'shared/utils/styles';
 import { Textarea } from 'shared/components';
 
 export const TitleTextarea = styled(Textarea)`
-  margin: 18px 0 0 18px;
+  margin: 0px 0 0 18px;
   height: 22px;
   width: 90%;
   textarea {

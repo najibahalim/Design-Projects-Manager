@@ -29,6 +29,8 @@ export const SelectItemLabel = styled.div`
 
 export const ModalInput = styled(Input)`
   margin-left: 20px;
+  margin-bottom: 20px;
+  margin-top: 10px;
   width: 90%;
 `;
 export const ModalSectionTitle = styled(SectionTitle)`
@@ -64,7 +66,7 @@ export const EditButton = styled(Button)`
 `;
 
 export const TitleTextarea = styled(Textarea)`
-  margin: 18px 0 0 18px;
+  margin: 10px 0 20px 18px;
   height: 25px;
   width: 90%;
 
@@ -131,7 +133,6 @@ export const StyledIcon = styled(Icon)`
 
 export const CheckIcon = styled(Icon)`
  color: ${props => props.color || 'deepskyblue'};
- padding: 5px;
 `;
 
 export const Description = styled.p`

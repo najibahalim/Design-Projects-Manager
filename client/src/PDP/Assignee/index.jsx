@@ -10,9 +10,10 @@ const propTypes = {
   task: PropTypes.object.isRequired,
   updateTaskUser: PropTypes.func.isRequired,
   projectUsers: PropTypes.array.isRequired,
+  width: PropTypes.number,
 };
 
-const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers }) => {
+const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers, width }) => {
   const getUserById = userId => projectUsers.find(user => user.id === userId);
 
   const userOptions = projectUsers.map(user => ({ value: user.id, label: user.name }));
@@ -22,7 +23,7 @@ const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers }
       <SectionTitle>Assignee: </SectionTitle>
       <Select
         variant="empty"
-        dropdownWidth={343}
+        dropdownWidth={width || 343}
         withClearValue={false}
         name="assignee"
         value={task.userId || task.assigneeId}

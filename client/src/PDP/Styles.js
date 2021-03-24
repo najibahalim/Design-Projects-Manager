@@ -148,6 +148,12 @@ export const ItemInfo = styled.div`
   }
 `;
 
+export const TaskInfo = styled.div`
+  padding: 3px;
+  width: 90%;
+  display: inline-block;
+`;
+
 
 export const StyledIcon = styled(Icon)`
  float: right;

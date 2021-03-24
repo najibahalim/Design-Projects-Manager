@@ -119,9 +119,9 @@ const TaskMasterPage = (props) => {
           <Title> {selectedTask.name}</Title>
           <Title> Estimated Days: <TaskTitle>  {selectedTask.estimatedDays} </TaskTitle> </Title>
           
-          <Title> Checklist</Title>
+          <Title> Checklist:</Title>
           {selectedTask.checklist && selectedTask.checklist.map((listItem, index) => {
-            return <TaskTitle key={index}> <CheckIcon type={"task"} /> {listItem} </TaskTitle>
+            return <TaskTitle style={{ marginLeft: '20px' }} key={index}> <CheckIcon type={"task"} /> {listItem} </TaskTitle>
           })}
           <EditButton variant="primary" onClick={() => doAction({isAdd: false, isEdit: true})}>
             Edit
@@ -137,7 +137,10 @@ const TaskMasterPage = (props) => {
         withCloseIcon={false}
         renderContent={modal => (
           <Fragment>
-            <TaskTitle><CheckIcon type={"story"} /> {action.isAdd ? "Add" : "Edit"} Task Item </TaskTitle>
+            <br />
+
+            <TaskTitle style={{marginLeft: '20px'}}><CheckIcon type={"story"} /> {action.isAdd ? "Add" : "Edit"} Task Item  </TaskTitle>
+            <br />  <br />
             <ModalSectionTitle>Task Name</ModalSectionTitle>
               <TitleTextarea
               minRows={1}
@@ -152,7 +155,8 @@ const TaskMasterPage = (props) => {
               placeholder="Days"
 
             />
-            <ModalSectionTitle> <CheckIcon type={"task"} /> CHECKLIST </ModalSectionTitle>
+            <br/>
+            <ModalSectionTitle> <CheckIcon type={"task"} top={3}/> CHECKLIST </ModalSectionTitle>
               <TitleTextarea
                 minRows={3}
                 placeholder={`Cheklist Item 1

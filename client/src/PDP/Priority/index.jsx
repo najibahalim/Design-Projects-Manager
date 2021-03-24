@@ -10,15 +10,16 @@ import { Priority, Label } from './Styles';
 const propTypes = {
   task: PropTypes.object.isRequired,
   updateTaskPriority: PropTypes.func.isRequired,
+  width: PropTypes.number
 };
 
-const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority }) => (
+const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, width }) => (
   <Fragment>
     <SectionTitle>Priority:</SectionTitle>
     <Select
       variant="empty"
       withClearValue={false}
-      dropdownWidth={343}
+      dropdownWidth={width || 343}
       name="priority"
       value={task.priority}
       options={Object.values(IssuePriority).map(priority => ({
