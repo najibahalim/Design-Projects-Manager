@@ -26,7 +26,7 @@ export const StyledCheckbox = styled.div`
   display: inline-block;
   width: 16px;
   height: 16px;
-  background: ${props => props.checked ? 'salmon' : 'papayawhip'};
+  background: ${props => props.checked ? '#008DA6' : '#00B8D9'};
   border-radius: 3px;
   transition: all 150ms;
   ${HiddenCheckbox}:focus + & {

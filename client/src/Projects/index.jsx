@@ -6,6 +6,8 @@ import { updateProjectsByid } from 'shared/utils/javascript';
 import useApi from 'shared/hooks/api';
 import { PageLoader, PageError } from 'shared/components';
 import Lists from './Lists';
+import Sidebar from './Sidebar';
+
 
 
 const Projects = () => {
@@ -23,6 +25,8 @@ const Projects = () => {
 
   return (
     <ProjectPage>
+      <Sidebar />
+
       Projects
       <Lists
         projects={projects}

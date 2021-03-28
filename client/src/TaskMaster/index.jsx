@@ -9,6 +9,8 @@ import { TaskItem, TaskTitle, StyledIcon, CheckIcon, TitleTextarea, Content } fr
 import { ProjectPage } from '../Projects/Styles';
 import Loader from '../PDP/Loader';
 import { Icon, Modal, Input } from 'shared/components';
+import Sidebar from '../Projects/Sidebar';
+
 
 import {
   FormHeading,
@@ -100,6 +102,7 @@ const TaskMasterPage = (props) => {
 
   return (
     <ProjectPage>
+      <Sidebar/>
       Task Master
       <AddButton variant="primary" onClick={() => {selectTask({}); doAction({ isAdd: true, isEdit: false })}} >
         Add new Task

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { ProjectPage } from '../Projects/Styles';
 import api from 'shared/utils/api';
 import toast from 'shared/utils/toast';
+import Sidebar from '../Projects/Sidebar';
 import useApi from 'shared/hooks/api';
 import { PageError, CopyLinkButton, Button, AboutTooltip, IssuePriorityIcon, Checkbox } from 'shared/components';
 import { List, Title,IssuesCount, Issues } from '../Projects/Lists/List/Styles';
@@ -159,6 +160,7 @@ const ProjectDetailsPage = (props) => {
 
   return (
       <ProjectPage>
+      <Sidebar />
       <FormHeading>PROJECT: {project.name}</FormHeading>
 
         <Lists>
@@ -196,7 +198,7 @@ const ProjectDetailsPage = (props) => {
               return <TaskItem selected={isSelected} key={index} onClick={() => selectNewTask(task)} >
                 <TaskLine>
                   
-                  <TaskTitle>{task.name} [G-{task.taskMasterId}]</TaskTitle>
+                  <TaskTitle>{task.name}  [G-{task.taskMasterId}]</TaskTitle>
                   <EstimationBox>3/3/2020 - <br /> 3 days left</EstimationBox>
                   <Priority task={task} width={120} updateTaskPriority={updateTaskPriority} />
 
@@ -225,7 +227,7 @@ const ProjectDetailsPage = (props) => {
           {selectedTask.id ? <TaskInfo>
             <TaskHeading>{selectedTask.name}</TaskHeading>
 
-            <SectionTitle>Started On: </SectionTitle>
+            <SectionTitle>Duration: </SectionTitle>
             <br /> <br />
             <SectionTitle>Estimated Days:</SectionTitle>
             <Input value={selectedTask.estimatedDays.toString()} updateValue={updateFunction}></Input>
@@ -239,7 +241,7 @@ const ProjectDetailsPage = (props) => {
             {selectedTask.checklist && selectedTask.checklist.map((listItem, index) => {
               return <BlockLabel key={index}>
                 <Checkbox
-                  checked={false}
+                  checked={index%2 === 0}
                   itemId={23}
                   onChange={handleCheckboxChange}
                 />
@@ -248,7 +250,7 @@ const ProjectDetailsPage = (props) => {
 
             })}
   
-            <Comments task={{ comments: [{ updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 1, body: 'This is a comment', user: { name: 'Najiba' } }, { updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 2, body: 'This is a comment 2', user: { name: 'Najiba' } }]}} 
+            <Comments task={{ id:1,comments: [{ updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 1, body: 'This is a comment', user: { name: 'Najiba' } }, { updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 2, body: 'This is a comment 2', user: { name: 'Najiba' } }]}} 
             fetchTask={taskApiCallData[1]}></Comments>
             <br /> <br />
             <SectionTitle>Task History:</SectionTitle>
