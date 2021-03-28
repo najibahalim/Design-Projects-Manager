@@ -20,7 +20,7 @@ const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers, 
 
   return (
     <Fragment>
-      <SectionTitle>Assignee: </SectionTitle>
+      {!width ? <SectionTitle>Assignee: </SectionTitle> : <></>}
       <Select
         variant="empty"
         dropdownWidth={width || 343}

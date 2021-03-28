@@ -51,7 +51,7 @@ const ProjectBoardIssueDetailsComment = ({ comment, fetchIssue }) => {
 
   return (
     <Comment data-testid="issue-comment">
-      <UserAvatar name={comment.user.name} avatarUrl={comment.user.avatarUrl} />
+      <UserAvatar name={comment.user.name} />
       <Content>
         <Username>{comment.user.name}</Username>
         <CreatedAt>{formatDateTimeConversational(comment.createdAt)}</CreatedAt>

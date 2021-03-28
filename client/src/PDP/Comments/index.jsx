@@ -8,17 +8,17 @@ import Comment from './Comment';
 import { Comments, Title } from './Styles';
 
 const propTypes = {
-  issue: PropTypes.object.isRequired,
-  fetchIssue: PropTypes.func.isRequired,
+  task: PropTypes.object.isRequired,
+  fetchTask: PropTypes.func.isRequired,
 };
 
-const ProjectBoardIssueDetailsComments = ({ issue, fetchIssue }) => (
+const ProjectBoardIssueDetailsComments = ({ task, fetchTask }) => (
   <Comments>
-    <Title>Comments</Title>
-    <Create issueId={issue.id} fetchIssue={fetchIssue} />
+    <Title>Comments: </Title>
+    <Create taskId={task.id} fetchIssue={fetchTask} />
 
-    {sortByNewest(issue.comments, 'createdAt').map(comment => (
-      <Comment key={comment.id} comment={comment} fetchIssue={fetchIssue} />
+    {sortByNewest(task.comments, 'createdAt').map(comment => (
+      <Comment key={comment.id} comment={comment} fetchIssue={fetchTask} />
     ))}
   </Comments>
 );

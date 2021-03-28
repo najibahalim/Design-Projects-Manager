@@ -15,6 +15,15 @@ export const FormHeading = styled.div`
   ${font.size(24)}
 `;
 
+export const TaskHeading = styled.div`
+  padding: 15px;
+  ${font.size(15)}
+  font-weight: bold;
+  opacity: 0.75;
+  border-bottom: 1px dotted black;
+  margin-bottom: 20px;
+`;
+
 export const SelectItem = styled.div`
   display: flex;
   align-items: center;
@@ -123,14 +132,39 @@ export const TaskItem = styled.div`
   }
 `;
 
+export const TaskLine = styled.div`
+ display: flex;
+ align-items: baseline;
+ flex-direction: ${props => props.direction || 'row'};
+ margin-bottom: 10px;
+ justify-content: space-between;
+
+`;
+
+export const EstimationBox = styled.div`
+ display: inline-block;
+ max-width: 40%;
+ padding: 5px;
+ margin: 5px;
+  ${font.size(12.5)}
+  ${font.medium}
+
+`;
+
 export const TaskTitle = styled.div`
   padding-bottom: 11px;
   display: inline-block;
-  width: 80%;
   ${font.size(14)}
   @media (max-width: 1100px) {
     ${font.size(13.5)}
   }
+`;
+
+export const HistoryItem = styled(TaskTitle)`
+  margin: 10px;
+  margin-left: 20px;
+  display: block;
+  
 `;
 
 export const ItemInfo = styled.div`
@@ -150,7 +184,7 @@ export const ItemInfo = styled.div`
 
 export const TaskInfo = styled.div`
   padding: 3px;
-  width: 90%;
+  width: 100%;
   display: inline-block;
 `;
 
@@ -225,7 +259,7 @@ export const TopActionsRight = styled.div`
 
 export const SectionTitle = styled.span`
   margin-right: 24px;
-  margin-left: 24px;
+  margin-left: 10px;
   margin-top: 24px;
   text-transform: uppercase;
   color: ${color.textMedium};
@@ -237,4 +271,7 @@ export const SectionTitle = styled.span`
 export const ScrollableDiv = styled.div`
   ${mixin.scrollableY}
   ${mixin.customScrollbar()}
+`
+export const BlockLabel = styled.label`
+  display: block;
 `

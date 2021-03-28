@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-import { IssueStatus, IssueStatusCopy } from 'shared/constants/issues';
+import { TaskStatus, TaskStatusCopy } from 'shared/constants/issues';
 import { Select, Icon } from 'shared/components';
 
 import { SectionTitle } from '../Styles';
@@ -15,26 +15,26 @@ const propTypes = {
 
 const ProjectBoardIssueDetailsStatus = ({ task, updateTaskStatus, width }) => (
   <Fragment>
-    <SectionTitle>Status: </SectionTitle>
+    {!width ? <SectionTitle>Status: </SectionTitle> : <></>}
     <Select
       variant="empty"
       dropdownWidth={width || 343}
       withClearValue={false}
       name="status"
       value={task.status}
-      options={Object.values(IssueStatus).map(status => ({
+      options={Object.values(TaskStatus).map(status => ({
         value: status,
-        label: IssueStatusCopy[status],
+        label: TaskStatusCopy[status],
       }))}
       onChange={status => updateTaskStatus(status)}
       renderValue={({ value: status }) => (
         <Status isValue color={status}>
-          <div>{IssueStatusCopy[status]}</div>
+          <div>{TaskStatusCopy[status]}</div>
           <Icon type="chevron-down" size={18} />
         </Status>
       )}
       renderOption={({ value: status }) => (
-        <Status color={status}>{IssueStatusCopy[status]}</Status>
+        <Status color={status}>{TaskStatusCopy[status]}</Status>
       )}
     />
   </Fragment>

@@ -1,7 +1,7 @@
 import { css } from 'styled-components';
 import Color from 'color';
 
-import { IssueType, IssueStatus, IssuePriority } from 'shared/constants/issues';
+import { IssueType, IssueStatus, IssuePriority, TaskStatus } from 'shared/constants/issues';
 
 export const color = {
   primary: '#0052cc', // Blue
@@ -47,6 +47,20 @@ export const issueStatusColors = {
   [IssueStatus.INPROGRESS]: '#fff',
   [IssueStatus.SELECTED]: color.textDark,
   [IssueStatus.DONE]: '#fff',
+};
+
+export const taskStatusColors = {
+  [TaskStatus.ONHOLD]: color.textDark,
+  [TaskStatus.INPROGRESS]: '#fff',
+  [TaskStatus.NOTSTARTED]: color.textDark,
+  [TaskStatus.DONE]: '#fff',
+};
+
+export const taskStatusBackgroundColors = {
+  [TaskStatus.ONHOLD]: color.backgroundMedium,
+  [TaskStatus.INPROGRESS]: color.primary,
+  [TaskStatus.NOTSTARTED]: color.backgroundMedium,
+  [TaskStatus.DONE]: color.success,
 };
 
 export const issueStatusBackgroundColors = {

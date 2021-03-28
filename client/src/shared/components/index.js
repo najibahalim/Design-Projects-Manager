@@ -22,3 +22,4 @@ export { default as Textarea } from './Textarea';
 export { default as TextEditedContent } from './TextEditedContent';
 export { default as TextEditor } from './TextEditor';
 export { default as Tooltip } from './Tooltip';
+export { default as Checkbox } from './Checkbox';

@@ -4,7 +4,7 @@ import { ProjectPage } from '../Projects/Styles';
 import api from 'shared/utils/api';
 import toast from 'shared/utils/toast';
 import useApi from 'shared/hooks/api';
-import { PageError, CopyLinkButton, Button, AboutTooltip, IssuePriorityIcon } from 'shared/components';
+import { PageError, CopyLinkButton, Button, AboutTooltip, IssuePriorityIcon, Checkbox } from 'shared/components';
 import { List, Title,IssuesCount, Issues } from '../Projects/Lists/List/Styles';
 import { Lists } from '../Projects/Lists/Styles';
 import Loader from './Loader';
@@ -31,18 +31,23 @@ import {
   SelectItem,
   SelectItemLabel,
   Divider,
+  HistoryItem,
+  BlockLabel,
   TaskTitle,
   FormHeading,
   ItemInfo,
   TaskItem,
+  TaskLine,
   StyledIcon,
   TitleText,
   Actions,
+  TaskHeading,
   AddButton,
   EditButton,
   ModalButton,
   ModalInput,
-  TaskInfo
+  TaskInfo,
+  EstimationBox
 } from './Styles';
 
 const updateFunction = (arg1, arg2) => {
@@ -91,6 +96,11 @@ const ProjectDetailsPage = (props) => {
     newTask.id = 9999;
     selectNewTask(newTask);
 
+  }
+
+  const handleCheckboxChange = (event, arg2) => {
+    console.log("Check box change ", event.target.checked);
+    console.log("Check box change ", arg2);
   }
 
   const updateTaskPriority = (newPriority) => {
@@ -178,17 +188,31 @@ const ProjectDetailsPage = (props) => {
         <List>
           {/* Item Details */}
           {selectedItem.id ? <Fragment>
-            <FormHeading>{selectedItem.itemName}</FormHeading>
-          
-            <SectionTitle>Tasks:    <Button style={{ marginLeft: '20%' }} icon="plus" variant="primary" onClick={() => { selectNewTask({taskMasterId: taskList[0].id, ...taskList[0]}); addNewTask(true) }}>Add</Button></SectionTitle>
+            <TaskHeading>{selectedItem.itemName}</TaskHeading>
+            <SectionTitle style={{ marginLeft: '24px' }}>Tasks:    <Button style={{ float: 'right' }} icon="plus" variant="secondary" onClick={() => { selectNewTask({taskMasterId: taskList[0].id, ...taskList[0]}); addNewTask(true) }}>Add</Button></SectionTitle>
 
             {selectedItem.tasks.map((task, index) => {
               const isSelected = selectedTask.id === task.id;
               return <TaskItem selected={isSelected} key={index} onClick={() => selectNewTask(task)} >
-                <TaskTitle>{task.name} </TaskTitle>
+                <TaskLine>
+                  
+                  <TaskTitle>{task.name} [G-{task.taskMasterId}]</TaskTitle>
+                  <EstimationBox>3/3/2020 - <br /> 3 days left</EstimationBox>
+                  <Priority task={task} width={120} updateTaskPriority={updateTaskPriority} />
+
+                </TaskLine>
+
+                <TaskLine direction = {'row'}>
+
+                  <Assignee task={task} width={120} updateTaskUser={updateTaskUser} projectUsers={users} />
+                  <Status task={task} width={140} updateTaskStatus={updateTaskStatus} />
+                
+                </TaskLine>
+               
+                {/* <TaskTitle>{task.name} </TaskTitle>
                 <StyledIcon type="chevron-right" top={1} />
                 <ItemInfo uppercase={true}>{task.status} </ItemInfo>
-                <ItemInfo align={'right'} color={'yellowgreen'}> <IssuePriorityIcon top={3} priority={task.priority.toString()} />  3 Days Remaining</ItemInfo>
+                <ItemInfo align={'right'} color={'yellowgreen'}> <IssuePriorityIcon top={3} priority={task.priority.toString()} />  3 Days Remaining</ItemInfo> */}
               </TaskItem>
             })}
            
@@ -199,14 +223,9 @@ const ProjectDetailsPage = (props) => {
         <List>
           {/* Task details */}
           {selectedTask.id ? <TaskInfo>
-            <FormHeading>{selectedTask.name}</FormHeading>
-            <Assignee task={selectedTask} width={150} updateTaskUser={updateTaskUser} projectUsers={users} />
-            <br /> <br />
-            <Priority task={selectedTask} width={150} updateTaskPriority={updateTaskPriority} />
-            <br /> <br />
-            <SectionTitle>Started On:</SectionTitle>
-            <br /> <br />
-            <Status task={selectedTask} width={200} updateTaskStatus={updateTaskStatus} />
+            <TaskHeading>{selectedTask.name}</TaskHeading>
+
+            <SectionTitle>Started On: </SectionTitle>
             <br /> <br />
             <SectionTitle>Estimated Days:</SectionTitle>
             <Input value={selectedTask.estimatedDays.toString()} updateValue={updateFunction}></Input>
@@ -218,10 +237,26 @@ const ProjectDetailsPage = (props) => {
             <br /> <br />
             <SectionTitle>Check List:</SectionTitle> <br /> <br />
             {selectedTask.checklist && selectedTask.checklist.map((listItem, index) => {
-              return <TaskTitle style={{ marginLeft: '20px' }} key={index}> <CheckIcon type={"task"} /> {listItem} </TaskTitle>
+              return <BlockLabel key={index}>
+                <Checkbox
+                  checked={false}
+                  itemId={23}
+                  onChange={handleCheckboxChange}
+                />
+                <span>{listItem}</span>
+              </BlockLabel>
+
             })}
+  
+            <Comments task={{ comments: [{ updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 1, body: 'This is a comment', user: { name: 'Najiba' } }, { updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 2, body: 'This is a comment 2', user: { name: 'Najiba' } }]}} 
+            fetchTask={taskApiCallData[1]}></Comments>
             <br /> <br />
-            <SectionTitle>Comments:</SectionTitle>
+            <SectionTitle>Task History:</SectionTitle>
+            <HistoryItem>Charlotte: 3/3/2020 - 2/4/2020</HistoryItem>
+            <br /> <br />
+            <SectionTitle>Group History:</SectionTitle>
+            <HistoryItem>Design Task : 3/3/2020 - Current</HistoryItem>
+            <br /> <br />
           </TaskInfo> : <></>}
         </List>
         </Lists>

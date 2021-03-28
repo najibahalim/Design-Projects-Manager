@@ -4,6 +4,7 @@ import { font } from 'shared/utils/styles';
 
 export const Comments = styled.div`
   padding-top: 40px;
+  margin-left: 15px;
 `;
 
 export const Title = styled.div`

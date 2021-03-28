@@ -6,7 +6,7 @@ export const List = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 5px;
-  min-height: 400px;
+  min-height: 600px;
   width: 35%;
   border-radius: 3px;
   background: ${color.backgroundLightest};

@@ -15,7 +15,7 @@ const propTypes = {
 
 const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, width }) => (
   <Fragment>
-    <SectionTitle>Priority:</SectionTitle>
+    {!width ? <SectionTitle>Priority: </SectionTitle> : <></>}
     <Select
       variant="empty"
       withClearValue={false}
@@ -27,16 +27,16 @@ const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, width }) =
         label: IssuePriorityCopy[priority],
       }))}
       onChange={priority => updateTaskPriority(priority)}
-      renderValue={({ value: priority }) => renderPriorityItem(priority, true)}
-      renderOption={({ value: priority }) => renderPriorityItem(priority)}
+      renderValue={({ value: priority }) => renderPriorityItem(priority, true, !width)}
+      renderOption={({ value: priority }) => renderPriorityItem(priority, null, true)}
     />
   </Fragment>
 );
 
-const renderPriorityItem = (priority, isValue) => (
+const renderPriorityItem = (priority, isValue, showLabel) => (
   <Priority isValue={isValue}>
     <IssuePriorityIcon priority={priority} />
-    <Label>{IssuePriorityCopy[priority]}</Label>
+    {showLabel ? <Label>{IssuePriorityCopy[priority]}</Label> : <></>}
   </Priority>
 );
 
