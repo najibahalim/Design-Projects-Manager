@@ -23,9 +23,9 @@ function getToken() {
 
 const App = () => {
   const token = getToken();
-  if (!token) {
-    return <Login setToken={setToken} />
-  }
+  // if (!token) {
+  //   return <Login setToken={setToken} />
+  // }
   return < Fragment >
     <NormalizeStyles />
     <BaseStyles />

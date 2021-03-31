@@ -14,16 +14,17 @@ import {
 import Item from './Item';
 
 import is from 'utils/validation';
-import {IssueStatus, IssuePriority } from 'constants/issues';
+import {IssuePriority } from 'constants/issues';
 
 import { Comment } from '.';
 import Users from './Users';
+import { TaskStatus } from 'constants/projects';
 @Entity()
 class Task extends BaseEntity {
   static validations = {
     name: [is.required(), is.maxLength(200)],
     estimatedDays: [is.required()],
-    status: [is.required(), is.oneOf(Object.values(IssueStatus))],
+    status: [is.required(), is.oneOf(Object.values(TaskStatus))],
     priority: [is.required(), is.oneOf(Object.values(IssuePriority))],
 
 
@@ -35,7 +36,7 @@ class Task extends BaseEntity {
   name: string;
 
   @Column('varchar')
-  status: IssueStatus;
+  status: TaskStatus;
 
   @Column('varchar')
   priority: IssuePriority;
@@ -54,6 +55,10 @@ class Task extends BaseEntity {
 
   @Column('integer')
   taskMasterId: number;
+
+
+  @Column('integer', { nullable: true })
+  groupID: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

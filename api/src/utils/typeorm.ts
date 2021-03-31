@@ -1,8 +1,9 @@
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 
-import { Project, User, Issue, Comment, Projects, ItemType, Task, Item, TaskMaster, Users } from 'entities';
+import { Project, User, Issue, Comment, Projects, ItemType, Task, Item, TaskMaster, Users, TaskMasterGroup } from 'entities';
 import { EntityNotFoundError, BadUserInputError } from 'errors';
 import { generateErrors } from 'utils/validation';
+import TaskHistory from 'entities/TaskHistory';
 
 type EntityConstructor =
   | typeof Project
@@ -14,10 +15,12 @@ type EntityConstructor =
   | typeof Task
   | typeof Item
   | typeof TaskMaster
-  | typeof Users;
-type EntityInstance = Project | User | Issue | Comment | Projects | TaskMaster| Item | Task | ItemType | Users;
+  | typeof Users
+  | typeof TaskHistory
+  | typeof TaskMasterGroup;
+type EntityInstance = Project | User | Issue | Comment | Projects | TaskMaster | Item | Task | ItemType | Users | TaskMasterGroup | TaskHistory;
 
-const entities: { [key: string]: EntityConstructor } = { Comment, Issue, Project, User, Projects, Users };
+const entities: { [key: string]: EntityConstructor } = { Comment, Issue, Project, User, Projects, Users, TaskMasterGroup };
 
 export const findEntityOrThrow = async <T extends EntityConstructor>(
   Constructor: T,

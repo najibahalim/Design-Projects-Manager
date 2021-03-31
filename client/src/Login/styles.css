@@ -1,188 +1,162 @@
-
-
-html {
-  background: #149ad1;
+#login {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fredoka One', 'Times New Roman', Times, serif;
+    color: #149ad1;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Fredoka One', 'Times New Roman', Times, serif;
-  color: #149ad1;
+#login::selection {
+    background: #149ad1;
+    color: #FFF;
 }
 
-*::selection{
-  background: #149ad1;
-  color: #FFF;
+#login section {
+    height: 60vh;
+    width: 100%;
+    background-color: #149ad1;
+    position: relative;
+    animation: left .75s ease-out;
 }
 
-section {
-  height: 60vh;
-  width: 100%;
-  background-color: #149ad1;
-  position: relative;
-  animation: left .75s ease-out;
+#login section::after {
+    background-color: #149ad1;
+    width: 100%;
+    height: 175px;
+    position: absolute;
+    content: " ";
+    bottom: -75px;
+    transform: skewY(3.5deg);
 }
 
-section::after {
-  background-color: #149ad1;
-  width: 100%;
-  height: 175px;
-  position: absolute;
-  content: " ";
-  bottom: -75px;
-  transform: skewY(3.5deg);
+#login .card {
+    background-color: #fff;
+    width: 30%;
+    height: 70%;
+    position: absolute;
+    right: 35%;
+    top: 18%;
+    z-index: 100;
+    border-radius: 40px;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.25), inset -5px -5px 20px rgba(0, 0, 0, .25), inset 5px 5px 20px rgba(255, 255, 255, .25);
+    animation: right .75s ease-in;
 }
 
-.card {
-  background-color: #fff;
-  width: 30%;
-  height: 70%;
-  position: absolute;
-  right: 35%;
-  top: 18%;
-  z-index: 100;
-  border-radius: 40px;
-  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.25),
-    inset -5px -5px 20px rgba(0,0,0,.25),
-    inset 5px 5px 20px rgba(255,255,255,.25);
-  animation: right .75s ease-in;
+#login .content {
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    height: 100%;
 }
 
-.content {
-  display : flex;
-  flex-direction: column;
-  padding: 2em;
-  height: 100%;
+#login .user,
+.pass {
+    position: relative;
 }
 
-.user, .pass {
-  position: relative;
-  
+#login .content i {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #149ad1;
+    font-size: 1.125rem;
 }
 
-.content i {
-  position: absolute;
-  top: 50%;
-  left: 20px;
-  transform: translateY(-50%);
-  color: #149ad1;
-  font-size: 1.125rem;
+#login input[type="text"],
+#login input[type="password"] {
+    font-size: 1.125rem;
+    margin: .75em 0;
+    width: 100%;
+    border-radius: 100px;
+    border: none;
+    padding: .8em 1.5em .8em 2.75em;
+    color: #149ad1;
+    box-shadow: 1px 3px 10px #00000020, inset -1px -3px 10px #00000020, inset 1px 3px 10px #ffffff20;
 }
 
-input[type="text"], input[type="password"] {
-  font-size: 1.125rem;
-  margin: .75em 0;
-  width: 100%;
-  border-radius: 100px;
-  border: none;
-  padding: .8em 1.5em .8em 2.75em;
-  color: #149ad1;
-  box-shadow: 1px 3px 10px #00000020,
-    inset -1px -3px 10px #00000020,
-    inset 1px 3px 10px #ffffff20;
+#login input[type="text"]::placeholder,
+#login input[type="password"]::placeholder {
+    color: #0e4c6690;
+    font-size: 1rem;
+    margin-left: 1em;
 }
 
-input[type="text"]::placeholder,
-input[type="password"]::placeholder{
-  color: #0e4c6690;
-  font-size: 1rem;
-  margin-left: 1em;
+#login input[type="text"]:focus,
+#login input[type="password"]:focus {
+    outline: none;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
-  outline: none;
+#login h2 {
+    margin: 1em;
+    font-size: 2rem;
+    text-align: center;
 }
 
-h2 {
-  margin: 1em;
-  font-size: 2rem;
-  text-align: center;
+#login .else {
+    display: flex;
+    align-items: center;
+    width: 85%;
+    margin: .5em auto;
 }
 
-.else {
-  display: flex;
-  align-items: center;
-  width: 85%;
-  margin: .5em auto;
+#login .else span {
+    margin-left: auto;
 }
 
-.else span {
-  margin-left: auto;
+#login .else span,
+#login .else label {
+    font-size: .75rem;
+    text-align: right;
+    opacity: .65;
+    cursor: pointer;
+    transition: 250ms;
 }
 
-.else span,
-.else label {
-  font-size: .75rem;
-  text-align: right;
-  opacity: .65;
-  cursor: pointer;
-  transition: 250ms;
+#login .else label {
+    margin-left: .5em;
 }
 
-.else label {
-  margin-left: .5em;
+#login span:hover,
+#login label:hover {
+    opacity: 100%;
 }
 
-span:hover,
-label:hover{
-  opacity: 100%;
+#login span:active,
+#login label:active {
+    transform: scale(.99);
 }
 
-span:active,
-label:active{
-  transform: scale(.99);
+#login input[type="submit"] {
+    background-color: #149ad1;
+    border: none;
+    color: #fff;
+    padding: 1.1em 2.5em;
+    border-radius: 100px;
+    margin: 1.2em auto;
+    cursor: pointer;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, .25), inset -2px -3px 10px rgba(0, 0, 0, .35), inset 2px 3px 10px rgba(255, 255, 255, .5);
+    letter-spacing: 1.25px;
 }
 
-input[type="submit"] {
-  background-color: #149ad1;
-  border: none;
-  color: #fff;
-  padding: 1.1em 2.5em;
-  border-radius: 100px;
-  margin: 1.2em auto;
-  cursor: pointer;
-  box-shadow: 2px 3px 10px rgba(0,0,0,.25),
-  inset -2px -3px 10px rgba(0,0,0,.35),
-  inset 2px 3px 10px rgba(255,255,255,.5);
-  letter-spacing: 1.25px;
+#login input[type="submit"]:hover {
+    background: #34a1ce;
 }
 
-input[type="submit"]:hover {
-  background: #34a1ce;
+#login input[type="submit"]:active {
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, .25), inset -2px -3px 10px rgba(255, 255, 255, .35), inset 2px 3px 10px rgba(0, 0, 0, .25);
 }
 
-input[type="submit"]:active {
-    box-shadow: 2px 3px 10px rgba(0,0,0,.25),
-  inset -2px -3px 10px rgba(255,255,255,.35),
-  inset 2px 3px 10px rgba(0,0,0,.25);
+#login input[type="submit"]:focus {
+    outline: none;
 }
 
-input[type="submit"]:focus {
-  outline: none;
-}
-
-
-section::before {
-  background-color: #fff;
-  width: 100%;
-  height: 250px;
-  position: absolute;
-  content: " ";
-  top: -100px;
-  transform: skewY(-3.5deg);
-}
-
-.fa-instagram {
-position: absolute;
-  color: #149ad1;
-  bottom: 20%;
-  left: 20%;
-  font-size: 1.5rem;
-  transition: 300ms;
-}
-
-.instagram:hover .fa-instagram {
-  color: #149ad195;
+#login section::before {
+    background-color: #fff;
+    width: 100%;
+    height: 250px;
+    position: absolute;
+    content: " ";
+    top: -100px;
+    transform: skewY(-3.5deg);
 }

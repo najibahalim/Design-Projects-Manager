@@ -5,16 +5,15 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
 import is from 'utils/validation';
-import TaskMasterGroup from './TaskMasterGroup';
+import TaskMaster from './TaskMaster';
 @Entity()
-class TaskMaster extends BaseEntity {
+class TaskMasterGroup extends BaseEntity {
   static validations = {
     name: [is.required(), is.maxLength(200)],
-    estimatedDays: [is.required()],
   };
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,22 +21,20 @@ class TaskMaster extends BaseEntity {
   @Column('varchar')
   name: string;
 
-  @Column('integer', { nullable: true})
-  estimatedDays: string;
-
-  @Column("varchar", { array: true, nullable: true })
-  checklist: string[];
-
-  @ManyToOne(() => TaskMasterGroup, tmg => tmg.subtasks)
-  group: TaskMasterGroup;
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
-  
+  @OneToMany(
+    () => TaskMaster,
+    task => task.group,
+  )
+  subtasks: TaskMaster[];
+
+
+
 }
 
-export default TaskMaster;
+export default TaskMasterGroup;

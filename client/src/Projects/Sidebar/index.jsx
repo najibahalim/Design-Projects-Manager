@@ -24,13 +24,13 @@ const ProjectSidebar = () => {
       <ProjectInfo>
         <ProjectAvatar />
         <ProjectTexts>
-          <ProjectName>Demaneistic</ProjectName>
+          <ProjectName>DiMan</ProjectName>
           <ProjectCategory>Design Management</ProjectCategory>
         </ProjectTexts>
       </ProjectInfo>
 
       {renderLinkItem('Project Board', 'board', '/projects')}
-      {renderLinkItem('Task Master', 'settings', 'taskMaster')}
+      {renderLinkItem('Task Master', 'settings', '/taskMaster')}
       <Divider />
       {renderLinkItem('Work Report', 'shipping')}
       {renderLinkItem('Issues and filters', 'issues')}

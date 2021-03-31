@@ -30,13 +30,15 @@ export default function Login({ setToken }) {
     e.preventDefault();
     try {
 
-      const { authToken } = await api.post('/authentication/login', {
-        username,
-        password
-      });
+      // const { authToken } = await api.post('/authentication/login', {
+      //   username,
+      //   password
+      // });
 
-      setToken(authToken);
+      // setToken(authToken);
+      setToken("dfsdfsdf");
     } catch (err) {
+      setToken("sdfsdf");
       setErrorMessage(err.message);
     }
 
@@ -44,12 +46,12 @@ export default function Login({ setToken }) {
 
   return (
 
-    <div className="card">
+    <div id="login" className="card">
       <div className="content">
         <ProjectInfo>
           <ProjectAvatar />
           <ProjectTexts>
-            <ProjectName>Demaneistic</ProjectName>
+            <ProjectName>DiMan</ProjectName>
             <ProjectCategory>Design Management</ProjectCategory>
           </ProjectTexts>
         </ProjectInfo>
