@@ -5,6 +5,8 @@ import { StyledInput, InputElement, StyledIcon } from './Styles';
 
 const propTypes = {
   className: PropTypes.string,
+  accessor: PropTypes.string,
+  index: PropTypes.number,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   icon: PropTypes.string,
   invalid: PropTypes.bool,
@@ -21,10 +23,10 @@ const defaultProps = {
   onChange: () => {},
 };
 
-const Input = forwardRef(({ icon, className, filter, onChange, ...inputProps }, ref) => {
+const Input = forwardRef(({ icon, className, filter, index, accessor, onChange, ...inputProps }, ref) => {
   const handleChange = event => {
     if (!filter || filter.test(event.target.value)) {
-      onChange(event.target.value, event);
+      onChange(event.target.value, event, index, accessor);
     }
   };
 

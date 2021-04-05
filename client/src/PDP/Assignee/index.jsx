@@ -10,17 +10,17 @@ const propTypes = {
   task: PropTypes.object.isRequired,
   updateTaskUser: PropTypes.func.isRequired,
   projectUsers: PropTypes.array.isRequired,
+  index: PropTypes.number,
   width: PropTypes.number,
 };
 
-const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers, width }) => {
+const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers, index, width }) => {
   const getUserById = userId => projectUsers.find(user => user.id === userId);
 
   const userOptions = projectUsers.map(user => ({ value: user.id, label: user.name }));
 
   return (
     <Fragment>
-      {!width ? <SectionTitle>Assignee: </SectionTitle> : <></>}
       <Select
         variant="empty"
         dropdownWidth={width || 343}
@@ -28,7 +28,7 @@ const ProjectBoardIssueDetailsAssignee = ({ task, updateTaskUser, projectUsers, 
         name="assignee"
         value={task.userId || task.assigneeId}
         options={userOptions}
-        onChange={userId => updateTaskUser(userId)}
+        onChange={userId => updateTaskUser(userId, null, index, 'userId')}
         renderValue={({ value: userId }) => renderUser(getUserById(userId), true)}
         renderOption={({ value: userId }) => renderUser(getUserById(userId))}
       />

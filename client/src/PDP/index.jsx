@@ -16,7 +16,7 @@ import Input from './Input';
 import Comments from './Comments';
 import TaskSelect from './TaskSelect';
 import Status from './Status';
-
+// import {Divider} from '../Projects/Sidebar/Styles';
 
 
 import Assignee from './Assignee';
@@ -60,6 +60,13 @@ const ProjectDetailsPage = (props) => {
   const [selectedItem, selectItem] = useState({});
   const [addingNewTask, addNewTask] = useState(false);
   const [selectedTask, selectNewTask] = useState({});
+
+  //for adding a new Task
+  const [selectedGroup, selectGroup] = useState({});
+  const [newTaskList, setTaskList] = useState([]);
+  const [groupCounter, decementGroupCounter] = useState(9999);
+  const [taskCounter, decrementTaskCounter] = useState(9999);
+
   const $nameInputRef = useRef();
   const $checklistInputRef = useRef();
   const $estimatedDaysRef = useRef();
@@ -91,12 +98,23 @@ const ProjectDetailsPage = (props) => {
     });
   };
 
-  const taskSelectedWhileAdding = (taskId) => {
-    const newTask = taskList.find(task => task.id === taskId);
-    newTask.taskMasterId = newTask.id;
-    newTask.id = 9999;
-    selectNewTask(newTask);
-
+  const groupSelectedWhileAdding = (grpId) => {
+    const newGroup = taskList.find(task => task.id === grpId);
+    const subTaskList = [];
+    newGroup.subtasks.forEach(task=>{
+      subTaskList.push({
+        name: task.name,
+        priority: "1",
+        estimatedDays: task.estimatedDays,
+        checklist: task.checklist,
+        taskMasterId: task.id,
+        groupID: grpId,
+        itemId: selectedItem.id,
+        projectId: project.id
+      });
+    });
+    newGroup.subtasks = subTaskList;
+    selectGroup(newGroup);
   }
 
   const handleCheckboxChange = (event, arg2) => {
@@ -129,22 +147,29 @@ const ProjectDetailsPage = (props) => {
       return currentData;
     });
   }
+  
+  // Add new Task calls
+
+  const handleTaskCreationInput = (value, event, index, type) => {
+    switch(type) {
+      case 'priority':
+      case 'estimatedDays':
+      case 'userId':
+        selectedGroup.subtasks[index][type] = Number(value);
+        break;
+      case 'name':
+        selectedGroup.subtasks[index][type] = value;
+        break;
+      default:
+        console.log(type);
+    }
+  }
    const addNewTaskCall = async () => {
-    const newTaskFields = {
-      name: selectedTask.name,
-      status: selectedTask.status,
-      priority:Number(selectedTask.priority),
-      estimatedDays: Number($estimatedDaysRef.current.value),
-      checklist: selectedTask.checklist,
-      taskMasterId: selectedTask.taskMasterId,
-      itemId: selectedItem.id,
-      userId: selectedTask.userId,
-     
-    };
+     console.log(selectedGroup);
     try {
       addNewTask('working');
       await api.optimisticAdd(`/tasks`, {
-        updatedFields: newTaskFields,
+        updatedFields: selectedGroup.subtasks,
         currentFields: selectedTask,
         setLocalData: fields => {
           addNewTaskLocally(fields);
@@ -178,6 +203,7 @@ const ProjectDetailsPage = (props) => {
             return <TaskItem selected={isSelected} key={index} onClick={() => selectItem(item)} >
               <TaskTitle>{item.itemName} </TaskTitle>
               <StyledIcon type="chevron-right" top={1} />
+              <br/>
               <ItemInfo>{item.tasks.length} Task/(s)</ItemInfo>
               <ItemInfo align={'right'} color={'yellowgreen'}>5 Done</ItemInfo>
             </TaskItem> 
@@ -191,7 +217,7 @@ const ProjectDetailsPage = (props) => {
           {/* Item Details */}
           {selectedItem.id ? <Fragment>
             <TaskHeading>{selectedItem.itemName}</TaskHeading>
-            <SectionTitle style={{ marginLeft: '24px' }}>Tasks:    <Button style={{ float: 'right' }} icon="plus" variant="secondary" onClick={() => { selectNewTask({taskMasterId: taskList[0].id, ...taskList[0]}); addNewTask(true) }}>Add</Button></SectionTitle>
+            <SectionTitle style={{ marginLeft: '24px' }}>Task Groups:    <Button style={{ float: 'right' }} icon="plus" variant="secondary" onClick={() => { groupSelectedWhileAdding(taskList[0].id); addNewTask(true) }}>Add</Button></SectionTitle>
 
             {selectedItem.tasks.map((task, index) => {
               const isSelected = selectedTask.id === task.id;
@@ -200,7 +226,7 @@ const ProjectDetailsPage = (props) => {
                   
                   <TaskTitle>{task.name}  [G-{task.taskMasterId}]</TaskTitle>
                   <EstimationBox>3/3/2020 - <br /> 3 days left</EstimationBox>
-                  <Priority task={task} width={120} updateTaskPriority={updateTaskPriority} />
+                  <Priority task={task} index = {index} width={120} updateTaskPriority={updateTaskPriority} />
 
                 </TaskLine>
 
@@ -280,29 +306,44 @@ const ProjectDetailsPage = (props) => {
             </TopActions>
 
            
-            <SectionTitle>Select Task from Task Master</SectionTitle>
+            <SectionTitle>Select Task Group</SectionTitle>
             <br/>
-            <TaskSelect taskList={taskList} selectTask={taskSelectedWhileAdding} selectedTask={selectedTask}/>
+            <TaskSelect taskList={taskList} selectTask={groupSelectedWhileAdding} selectedTask={selectedGroup}/>
             <Icon type="chevron-down" top={1} />
-            <TitleText> {selectedTask.checklist.length} Checklist Items</TitleText>
-            <br/>
-            <br/>
-            <Assignee task={selectedTask} updateTaskUser={updateTaskUser} projectUsers={users}/>
-            <br />
-            <br />
-            <Priority task={selectedTask} updateTaskPriority={updateTaskPriority} />
-            <br />
-            <br />
-            <Status task={selectedTask} updateTaskStatus={updateTaskStatus}/>
-            <br/>
-            <br/>
-            <SectionTitle>Original Estimate (Days)</SectionTitle>
-            <ModalInput
-              ref={$estimatedDaysRef}
-              defaultValue={selectedTask.estimatedDays}
-              placeholder="Days"
+            <br/> <br/>
+            <SectionTitle>Subtasks:</SectionTitle>
+            <br /> <br/>
+            {
+              selectedGroup.subtasks.map((subtask, index)=> {
+                return <Fragment key={index}> 
+                  <ModalInput
+                    defaultValue={subtask.name}
+                    index={index}
+                    accessor={'name'}
+                    placeholder="Name"
+                    onChange = {handleTaskCreationInput}
+                  />
+                  <TaskTitle style={{ marginLeft: '20px' }}>Priority:</TaskTitle>
+                  <Priority task={subtask} index={index} updateTaskPriority={handleTaskCreationInput} />
+                  <TaskTitle style={{ marginLeft: '20px' }}>Assignee:</TaskTitle>
+                  <Assignee task={subtask} index={index} updateTaskUser={handleTaskCreationInput} projectUsers={users} />
+                  <br/>
+                  <TaskTitle style={{ marginLeft: '20px' }}>Estimated Days:</TaskTitle>
+                  <ModalInput
+                    defaultValue={subtask.estimatedDays}
+                    placeholder="Estimated Days"
+                    width={'30%'}
+                    accessor={'estimatedDays'}
+                    type={'number'}
+                    index={index}
+                    onChange={handleTaskCreationInput}
+                  />
 
-            />
+                  <Divider/>
+                  <br/>
+                </Fragment>
+              })
+            }
             <br/>
             <br/>
       

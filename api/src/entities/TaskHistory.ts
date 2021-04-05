@@ -30,7 +30,7 @@ class TaskHistory extends BaseEntity {
   @Column('integer')
   projectId: number;
 
-  @Column('integer')
+  @Column('integer', {nullable: true})
   assigneeId: number;
 
   @Column('integer')

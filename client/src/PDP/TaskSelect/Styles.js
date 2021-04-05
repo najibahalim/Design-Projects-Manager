@@ -3,7 +3,7 @@ import { Select } from 'shared/components';
 
 import { color, font } from 'shared/utils/styles';
 
-export const Priority = styled.div`
+export const Priority = styled.div `
   display: flex;
   align-items: center;
   ${props =>
@@ -20,6 +20,5 @@ export const Priority = styled.div`
 
 export const Label = styled.div`
   padding: 0 3px 0 8px;
-  margin: 10px 20px;
   ${font.size(14.5)}
 `;

@@ -6,16 +6,17 @@ import { Avatar } from 'shared/components';
 import { Button, Form } from 'shared/components';
 import { Textarea, Input } from 'shared/components';
 import TaskSelect from './TaskSelect/index';
-export const FormElement = styled(Form.Element)`
+export const FormElement = styled(Form.Element)
+`
   padding: 25px 40px 35px;
 `;
 
-export const FormHeading = styled.div`
+export const FormHeading = styled.div `
   padding: 15px;
   ${font.size(24)}
 `;
 
-export const TaskHeading = styled.div`
+export const TaskHeading = styled.div `
   padding: 15px;
   ${font.size(15)}
   font-weight: bold;
@@ -24,7 +25,7 @@ export const TaskHeading = styled.div`
   margin-bottom: 20px;
 `;
 
-export const SelectItem = styled.div`
+export const SelectItem = styled.div `
   display: flex;
   align-items: center;
   margin-right: 15px;
@@ -37,7 +38,7 @@ export const SelectItemLabel = styled.div`
 
 export const ModalInput = styled(Input)`
   margin-left: 20px;
-  width: 90%;
+  width: ${props => props.width || '90%' }
 `;
 export const TitleText = styled.span`
   padding: 13px 10px 17px;
@@ -152,7 +153,7 @@ export const EstimationBox = styled.div`
 `;
 
 export const TaskTitle = styled.div`
-  padding-bottom: 11px;
+  padding: 11px 0px;
   display: inline-block;
   ${font.size(14)}
   @media (max-width: 1100px) {

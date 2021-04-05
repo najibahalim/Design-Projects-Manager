@@ -1,7 +1,7 @@
 import { TaskStatus } from 'constants/projects';
 import { Issue, Item, Task, Users } from 'entities';
 import { catchErrors } from 'errors';
-import { saveHistory } from 'utils/history';
+import { captureNewTask, saveHistory } from 'utils/history';
 import { deleteEntity, createEntity, findEntityOrThrow, validateAndSaveEntity } from 'utils/typeorm';
 
 
@@ -13,25 +13,31 @@ export const getIssueWithUsersAndComments = catchErrors(async (req, res) => {
 });
 
 export const create = catchErrors(async (req, res) => {
-  const taskCreationBody: Task = new Task();
-  taskCreationBody.name = req.body.name,
-  taskCreationBody.priority = req.body.priority;
-  taskCreationBody.status = TaskStatus.NOTSTARTED;
-  taskCreationBody.estimatedDays = req.body.estimatedDays;
-  taskCreationBody.actualDays = req.body.actualDays;
-  taskCreationBody.taskMasterId = req.body.taskMasterId;
-  taskCreationBody.checklist = req.body.checklist;
-  taskCreationBody.groupID = req.body.groupID;
-  const [taskItem, taskUser] = await Promise.all([
-    findEntityOrThrow(Item, req.body.itemId),
-    findEntityOrThrow(Users, req.body.userId)
-  ]);
-  taskCreationBody.item = taskItem;
-  taskCreationBody.assignee = taskUser;
-  const task = await createEntity(Task, taskCreationBody);
-  req.body.action = 'Created';
-  await saveHistory(taskCreationBody, req, task.id);
-  res.respond({ task });
+  const tasks = [];
+  for(const taskBody of req.body) {
+    const taskCreationBody: Task = new Task();
+    taskCreationBody.name = taskBody.name,
+      taskCreationBody.priority = taskBody.priority;
+    taskCreationBody.status = TaskStatus.NOTSTARTED;
+    taskCreationBody.estimatedDays = taskBody.estimatedDays;
+    taskCreationBody.actualDays = taskBody.actualDays;
+    taskCreationBody.taskMasterId = taskBody.taskMasterId;
+    taskCreationBody.checklist = taskBody.checklist;
+    taskCreationBody.groupID = taskBody.groupID;
+    const [taskItem, taskUser] = await Promise.all([
+      findEntityOrThrow(Item, taskBody.itemId),
+      findEntityOrThrow(Users, taskBody.userId)
+    ]);
+    taskCreationBody.item = taskItem;
+    taskCreationBody.assignee = taskUser;
+    const task = await createEntity(Task, taskCreationBody);
+    taskBody.action = 'Created';
+    await captureNewTask(taskCreationBody, taskBody, task.id, req.currentUser.id);
+    tasks.push(task);
+   
+  }
+  res.respond({ tasks });
+  
 });
 
 export const update = catchErrors(async (req, res) => {

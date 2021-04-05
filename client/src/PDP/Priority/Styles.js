@@ -2,13 +2,14 @@ import styled, { css } from 'styled-components';
 
 import { color, font } from 'shared/utils/styles';
 
-export const Priority = styled.div`
+export const Priority = styled.div `
   display: flex;
   align-items: center;
+  padding: 5px;
   ${props =>
     props.isValue &&
     css`
-      padding: 3px 4px 3px 0px;
+      padding: 3px 4px 3px 4px;
       border-radius: 4px;
       &:hover,
       &:focus {

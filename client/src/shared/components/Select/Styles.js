@@ -3,12 +3,12 @@ import styled, { css } from 'styled-components';
 import { color, font, mixin, zIndexValues } from 'shared/utils/styles';
 import Icon from 'shared/components/Icon';
 
-export const StyledSelect = styled.div`
+export const StyledSelect = styled.div `
   position: relative;
   border-radius: 4px;
   cursor: pointer;
   ${font.size(14)}
-  ${props => props.variant === 'empty' && `display: inline-block;`}
+  ${props => props.variant === 'empty' && `display: inline-block;padding: 5px`}
   ${props =>
     props.variant === 'normal' &&
     css`

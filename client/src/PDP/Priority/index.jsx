@@ -10,12 +10,12 @@ import { Priority, Label } from './Styles';
 const propTypes = {
   task: PropTypes.object.isRequired,
   updateTaskPriority: PropTypes.func.isRequired,
+  index: PropTypes.number,
   width: PropTypes.number
 };
 
-const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, width }) => (
+const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, index, width }) => (
   <Fragment>
-    {!width ? <SectionTitle>Priority: </SectionTitle> : <></>}
     <Select
       variant="empty"
       withClearValue={false}
@@ -26,7 +26,7 @@ const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, width }) =
         value: priority,
         label: IssuePriorityCopy[priority],
       }))}
-      onChange={priority => updateTaskPriority(priority)}
+      onChange={priority => updateTaskPriority(priority, null, index, 'priority')}
       renderValue={({ value: priority }) => renderPriorityItem(priority, true, !width)}
       renderOption={({ value: priority }) => renderPriorityItem(priority, null, true)}
     />
@@ -35,7 +35,7 @@ const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, width }) =
 
 const renderPriorityItem = (priority, isValue, showLabel) => (
   <Priority isValue={isValue}>
-    <IssuePriorityIcon priority={priority} />
+    <IssuePriorityIcon priority={priority} top={1}/>
     {showLabel ? <Label>{IssuePriorityCopy[priority]}</Label> : <></>}
   </Priority>
 );
