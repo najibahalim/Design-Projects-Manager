@@ -16,6 +16,7 @@ import Input from './Input';
 import Comments from './Comments';
 import TaskSelect from './TaskSelect';
 import Status from './Status';
+import {cloneDeep} from "lodash";
 // import {Divider} from '../Projects/Sidebar/Styles';
 
 
@@ -32,6 +33,7 @@ import {
   SelectItem,
   SelectItemLabel,
   Divider,
+  AccordianBody,
   HistoryItem,
   BlockLabel,
   TaskTitle,
@@ -51,10 +53,6 @@ import {
   EstimationBox
 } from './Styles';
 
-const updateFunction = (arg1, arg2) => {
-  console.log("Update called");
-  console.log(arg1, arg2);
-}
 
 const ProjectDetailsPage = (props) => {
   const [selectedItem, selectItem] = useState({});
@@ -87,6 +85,25 @@ const ProjectDetailsPage = (props) => {
   const updateLocalIssueDetails = fields =>
     setLocalData(currentData => ({ project: { ...currentData.projects, ...fields } }));
 
+  const updateFunction = (arg1, arg2) => {
+    console.log(arg1, arg2);
+    const updatedSubTask = cloneDeep(selectedTask);
+    updatedSubTask[arg2] = Number(arg1);
+    updatedSubTask.action = `Changed ${arg2.toUpperCase()} to ${arg1}`;
+    api.optimisticUpdate(`/tasks`, {
+      updatedFields: updatedSubTask,
+      currentFields: selectedTask,
+      setLocalData: fields => {
+        setLocalData(currentData => {
+          const item = currentData.items.find((item) => item.id === fields.itemId);
+          const grp = item.taskGroups.find((group) => group.id === fields.groupID);
+          const task = grp.tasks.find((task) => task.id === fields.id);
+          Object.assign(task, fields);
+          return currentData;
+        });
+      },
+    });
+  }
   const updateIssue = updatedFields => {
     api.optimisticUpdate(`/projects/${params.projectId}`, {
       updatedFields,
@@ -123,20 +140,81 @@ const ProjectDetailsPage = (props) => {
   }
 
   const updateTaskPriority = (newPriority) => {
-    const newTask = selectedTask;
-    newTask.priority = newPriority;
-    selectNewTask(newTask);
+    const updatedSubTask = cloneDeep(selectedTask);
+    updatedSubTask.priority = newPriority;
+    updatedSubTask.action = "";
+    switch (newPriority) {
+      case "1":
+        updatedSubTask.action = "Ranked Lowest";
+      case "2":
+        updatedSubTask.action = "Ranked Low";
+      case "3":
+        updatedSubTask.action = "Ranked Medium";
+      case "4":
+        updatedSubTask.action = "Ranked High";
+      case "5":
+        updatedSubTask.action = "Ranked Highest";
+    };
+    api.optimisticUpdate(`/tasks`, {
+      updatedFields: updatedSubTask,
+      currentFields: selectedTask,
+      setLocalData: fields => {
+        setLocalData(currentData => {
+          const item = currentData.items.find((item) => item.id === fields.itemId);
+          const grp = item.taskGroups.find((group) => group.id === fields.groupID);
+          const task = grp.tasks.find((task) => task.id === fields.id);
+          Object.assign(task, fields);
+          return currentData;
+        });
+      },
+    });
 
   }
   const updateTaskStatus = (newStatus) => {
-    const newTask = selectedTask;
-    newTask.status = newStatus;
-    selectNewTask(newTask);
+    const updatedSubTask = cloneDeep(selectedTask);
+    updatedSubTask.status = newStatus;
+    console.log(newStatus);
+    switch (newStatus) {
+      case "1":
+        updatedSubTask.action = "Started";
+      case "2":
+        updatedSubTask.action = "Marked as Done";
+      case "3":
+        updatedSubTask.action = "Put on Hold";
+    };
+    api.optimisticUpdate(`/tasks`, {
+      updatedFields: updatedSubTask,
+      currentFields: selectedTask,
+      setLocalData: fields => {
+        setLocalData(currentData => {
+          const item = currentData.items.find((item) => item.id === fields.itemId);
+          const grp = item.taskGroups.find((group) => group.id === fields.groupID);
+          const task = grp.tasks.find((task) => task.id === fields.id);
+          Object.assign(task, fields);
+          return currentData;
+        });
+      },
+    });
   }
-  const updateTaskUser = (newUserId) => {
-    const newTask = selectedTask;
-    newTask.userId = newUserId;
-    selectNewTask(newTask);
+  const updateTaskUser = async (newUserId) => {
+    const updatedSubTask = cloneDeep(selectedTask);
+    updatedSubTask.userId = newUserId;
+    updatedSubTask.action = "Assigned";
+    await api.optimisticUpdate(`/tasks`, {
+      updatedFields: updatedSubTask,
+      currentFields: selectedTask,
+      setLocalData: fields => {
+        setLocalData(currentData => {
+          const item = currentData.items.find((item) => item.id === fields.itemId);
+          const grp = item.taskGroups.find((group) => group.id === fields.groupID);
+          const task = grp.tasks.find((task)=>task.id === fields.id);
+          Object.assign(task, fields);
+          return currentData;
+        });
+      },
+    });
+    await userApiCall[1]();
+
   }
   const addNewTaskLocally = fields => {
     setLocalData(currentData => {
@@ -204,7 +282,7 @@ const ProjectDetailsPage = (props) => {
               <TaskTitle>{item.itemName} </TaskTitle>
               <StyledIcon type="chevron-right" top={1} />
               <br/>
-              <ItemInfo>{item.tasks.length} Task/(s)</ItemInfo>
+              <ItemInfo>{item.taskGroups.length} Task Groups/(s)</ItemInfo>
               <ItemInfo align={'right'} color={'yellowgreen'}>5 Done</ItemInfo>
             </TaskItem> 
           })}
@@ -218,30 +296,36 @@ const ProjectDetailsPage = (props) => {
           {selectedItem.id ? <Fragment>
             <TaskHeading>{selectedItem.itemName}</TaskHeading>
             <SectionTitle style={{ marginLeft: '24px' }}>Task Groups:    <Button style={{ float: 'right' }} icon="plus" variant="secondary" onClick={() => { groupSelectedWhileAdding(taskList[0].id); addNewTask(true) }}>Add</Button></SectionTitle>
+            {selectedItem.taskGroups.map((group, index) => {
+              const isGrpSelected = selectedGroup.id === group.id;
+              const iconDir = isGrpSelected ? "down" : "up";
+              return <TaskItem group={true} key={index} onClick={() => selectGroup(group)}>
+                <TaskTitle>{group.name}</TaskTitle>
+                <StyledIcon type={`chevron-${iconDir}`} top={1} size={30}/>
+                <AccordianBody>
+                  {isGrpSelected && group.tasks.map((task, index) => {
+                    const isSelected = selectedTask.id === task.id;
+                    return <TaskItem selected={isSelected} key={index} onClick={() => selectNewTask(task)} >
+                      <TaskLine>
 
-            {selectedItem.tasks.map((task, index) => {
-              const isSelected = selectedTask.id === task.id;
-              return <TaskItem selected={isSelected} key={index} onClick={() => selectNewTask(task)} >
-                <TaskLine>
-                  
-                  <TaskTitle>{task.name}  [G-{task.taskMasterId}]</TaskTitle>
-                  <EstimationBox>3/3/2020 - <br /> 3 days left</EstimationBox>
-                  <Priority task={task} index = {index} width={120} updateTaskPriority={updateTaskPriority} />
+                        <Priority task={task} index={index} width={200} updateTaskPriority={updateTaskPriority} />
+                        <TaskTitle>{task.name}</TaskTitle>
+                        <EstimationBox>3/3/2020 - 3 days left</EstimationBox>
+                      </TaskLine>
 
-                </TaskLine>
+                      <TaskLine direction={'row'}>
 
-                <TaskLine direction = {'row'}>
+                        <Assignee task={task} updateTaskUser={updateTaskUser} projectUsers={users} />
 
-                  <Assignee task={task} width={120} updateTaskUser={updateTaskUser} projectUsers={users} />
-                  <Status task={task} width={140} updateTaskStatus={updateTaskStatus} />
-                
-                </TaskLine>
-               
-                {/* <TaskTitle>{task.name} </TaskTitle>
-                <StyledIcon type="chevron-right" top={1} />
-                <ItemInfo uppercase={true}>{task.status} </ItemInfo>
-                <ItemInfo align={'right'} color={'yellowgreen'}> <IssuePriorityIcon top={3} priority={task.priority.toString()} />  3 Days Remaining</ItemInfo> */}
+                        <Status task={task} width={150} updateTaskStatus={updateTaskStatus} />
+
+                      </TaskLine>
+                    </TaskItem>
+                  })}
+                </AccordianBody>
               </TaskItem>
+
+
             })}
            
           </Fragment>: <TitleText>Select an ITEM to view Tasks</TitleText>}
@@ -256,10 +340,10 @@ const ProjectDetailsPage = (props) => {
             <SectionTitle>Duration: </SectionTitle>
             <br /> <br />
             <SectionTitle>Estimated Days:</SectionTitle>
-            <Input value={selectedTask.estimatedDays.toString()} updateValue={updateFunction}></Input>
+            <Input key={selectedTask.id + 'estimatedDays'} identifier={"estimatedDays"} value={selectedTask.estimatedDays} updateValue={updateFunction}/>
             <br /> <br />
             <SectionTitle>Actual Days:</SectionTitle>
-            <Input value={selectedTask.actualDays ? selectedTask.actualDays.toString(): '0'} updateValue={updateFunction}></Input>
+            <Input key={selectedTask.id + 'actualDays'} identifier={"actualDays"}  value={selectedTask.actualDays || 0} updateValue={updateFunction}></Input>
             <br /> <br />
             <SectionTitle>Variance: <TitleText>{selectedTask.variance}</TitleText></SectionTitle>
             <br /> <br />

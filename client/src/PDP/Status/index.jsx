@@ -15,7 +15,6 @@ const propTypes = {
 
 const ProjectBoardIssueDetailsStatus = ({ task, updateTaskStatus, width }) => (
   <Fragment>
-    {!width ? <SectionTitle>Status: </SectionTitle> : <></>}
     <Select
       variant="empty"
       dropdownWidth={width || 343}

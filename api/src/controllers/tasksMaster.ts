@@ -27,6 +27,17 @@ export const getAllTaskGrps = catchErrors(async (req, res) => {
   res.respond(taskMasterData);
 });
 
+export const getGroupsList = async () => {
+
+  return findEntities(TaskMasterGroup, {
+    order: {
+      updatedAt: "DESC",
+    },
+  });
+
+};
+
+
 export const updateGrp = catchErrors(async (req, res) => {
 
   const updatedTask = await updateEntity(TaskMasterGroup, req.body.id, req.body);

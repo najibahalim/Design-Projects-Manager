@@ -7,11 +7,12 @@ import { is, generateErrors } from 'shared/utils/validation';
 import { TitleTextarea, ErrorText } from './Styles';
 
 const propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
   updateValue: PropTypes.func.isRequired,
+  identifier: PropTypes.string,
 };
 
-const InputComponent = ({ value, updateValue }) => {
+const InputComponent = ({ value, updateValue, identifier }) => {
   const $titleInputRef = useRef();
   const [error, setError] = useState(null);
 
@@ -26,7 +27,7 @@ const InputComponent = ({ value, updateValue }) => {
     if (errors.title) {
       setError(errors.title);
     } else {
-      updateValue({ title });
+      updateValue(title, identifier);
     }
   };
 

@@ -117,19 +117,19 @@ export const IssueLink = styled(Link)`
 `;
 
 export const TaskItem = styled.div`
-  padding: 15px;
-  margin: 10px 20px;
+  padding: 5px;
+  margin: 10px 10px;
   border-radius: 5px;
   background: ${props => props.selected ? "lightgray" : "white"};
   box-shadow: 0px 1px 2px 0px rgba(9, 30, 66, 0.25);
   box-shadow: 0px 1px 2px 0px rgba(9, 30, 66, 0.25);
   transition: background 0.1s;
-  ${mixin.clickable}
+  ${props => !props.group && mixin.clickable};
   @media (max-width: 1100px) {
     padding: 10px 8px;
   }
   &:hover {
-    background: lightgray;
+    background:  ${props => !props.group ? "lightgray" : "white"};
   }
 `;
 
@@ -137,14 +137,27 @@ export const TaskLine = styled.div`
  display: flex;
  align-items: baseline;
  flex-direction: ${props => props.direction || 'row'};
- margin-bottom: 10px;
- justify-content: space-between;
+ margin-bottom: 3px;
+ justify-content: flex-start;
+
+`;
+
+
+export const AccordianBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  min-height: 1px;
+  width: 100%;
+  border-radius: 3px;
+  ${mixin.scrollableY}
+  ${mixin.customScrollbar()}
 
 `;
 
 export const EstimationBox = styled.div`
  display: inline-block;
- max-width: 40%;
+ max-width: 70%;
  padding: 5px;
  margin: 5px;
   ${font.size(12.5)}
