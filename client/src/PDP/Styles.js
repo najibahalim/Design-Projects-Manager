@@ -176,6 +176,7 @@ export const TaskTitle = styled.div`
 
 export const HistoryItem = styled(TaskTitle)`
   margin: 10px;
+  padding: 0px !important;
   margin-left: 20px;
   display: block;
   

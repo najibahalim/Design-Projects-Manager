@@ -3,6 +3,7 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 import is from 'utils/validation';
@@ -38,6 +39,10 @@ class TaskHistory extends BaseEntity {
 
   @Column('varchar')
   action: string;
+
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
   
 }
 

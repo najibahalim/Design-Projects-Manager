@@ -61,6 +61,7 @@ const ProjectDetailsPage = (props) => {
 
   //for adding a new Task
   const [selectedGroup, selectGroup] = useState({});
+  const [selectedTMGroup, selectTMGroup] = useState({});
   const [newTaskList, setTaskList] = useState([]);
   const [groupCounter, decementGroupCounter] = useState(9999);
   const [taskCounter, decrementTaskCounter] = useState(9999);
@@ -73,6 +74,7 @@ const ProjectDetailsPage = (props) => {
   const [{ data, error, setLocalData }, fetchProject] = useApi.get(`/projects/${params.projectId}`);
   const taskApiCallData = useApi.get(`/tasksMaster`);
   const userApiCall = useApi.get(`/users`);
+  const taskHistoryCall = useApi.get(`/taskHistory/${params.projectId}`);
 
 
   if (!data || !taskApiCallData[0].data) return <Loader />;
@@ -81,11 +83,12 @@ const ProjectDetailsPage = (props) => {
   const project = data;
   const taskList = taskApiCallData[0].data;
   const users = userApiCall[0].data;
+  const taskHistory = taskHistoryCall[0].data;
 
   const updateLocalIssueDetails = fields =>
     setLocalData(currentData => ({ project: { ...currentData.projects, ...fields } }));
 
-  const updateFunction = (arg1, arg2) => {
+  const updateFunction = async (arg1, arg2) => {
     console.log(arg1, arg2);
     const updatedSubTask = cloneDeep(selectedTask);
     updatedSubTask[arg2] = Number(arg1);
@@ -103,6 +106,7 @@ const ProjectDetailsPage = (props) => {
         });
       },
     });
+    await taskHistoryCall[1]();
   }
   const updateIssue = updatedFields => {
     api.optimisticUpdate(`/projects/${params.projectId}`, {
@@ -131,7 +135,7 @@ const ProjectDetailsPage = (props) => {
       });
     });
     newGroup.subtasks = subTaskList;
-    selectGroup(newGroup);
+    selectTMGroup(newGroup);
   }
 
   const handleCheckboxChange = (event, arg2) => {
@@ -139,7 +143,7 @@ const ProjectDetailsPage = (props) => {
     console.log("Check box change ", arg2);
   }
 
-  const updateTaskPriority = (newPriority) => {
+  const updateTaskPriority = async (newPriority) => {
     const updatedSubTask = cloneDeep(selectedTask);
     updatedSubTask.priority = newPriority;
     updatedSubTask.action = "";
@@ -168,9 +172,11 @@ const ProjectDetailsPage = (props) => {
         });
       },
     });
+    await taskHistoryCall[1]();
+
 
   }
-  const updateTaskStatus = (newStatus) => {
+  const updateTaskStatus = async (newStatus) => {
     const updatedSubTask = cloneDeep(selectedTask);
     updatedSubTask.status = newStatus;
     console.log(newStatus);
@@ -195,6 +201,8 @@ const ProjectDetailsPage = (props) => {
         });
       },
     });
+    await taskHistoryCall[1]();
+
   }
   const updateTaskUser = async (newUserId) => {
     const updatedSubTask = cloneDeep(selectedTask);
@@ -214,6 +222,7 @@ const ProjectDetailsPage = (props) => {
       },
     });
     await userApiCall[1]();
+    await taskHistoryCall[1]();
 
   }
   const addNewTaskLocally = fields => {
@@ -233,10 +242,10 @@ const ProjectDetailsPage = (props) => {
       case 'priority':
       case 'estimatedDays':
       case 'userId':
-        selectedGroup.subtasks[index][type] = Number(value);
+        selectedTMGroup.subtasks[index][type] = Number(value);
         break;
       case 'name':
-        selectedGroup.subtasks[index][type] = value;
+        selectedTMGroup.subtasks[index][type] = value;
         break;
       default:
         console.log(type);
@@ -247,7 +256,7 @@ const ProjectDetailsPage = (props) => {
     try {
       addNewTask('working');
       await api.optimisticAdd(`/tasks`, {
-        updatedFields: selectedGroup.subtasks,
+        updatedFields: selectedTMGroup.subtasks,
         currentFields: selectedTask,
         setLocalData: fields => {
           addNewTaskLocally(fields);
@@ -364,10 +373,19 @@ const ProjectDetailsPage = (props) => {
             fetchTask={taskApiCallData[1]}></Comments>
             <br /> <br />
             <SectionTitle>Task History:</SectionTitle>
-            <HistoryItem>Charlotte: 3/3/2020 - 2/4/2020</HistoryItem>
+            {taskHistory.map((item)=> {
+              if(item.taskId === selectedTask.id) {
+                return <HistoryItem>{users.find(user=> user.id === item.userId).name} : {item.action} </HistoryItem>
+              }
+            })}
+            
             <br /> <br />
             <SectionTitle>Group History:</SectionTitle>
-            <HistoryItem>Design Task : 3/3/2020 - Current</HistoryItem>
+            {taskHistory.map((item) => {
+              if (item.groupId === selectedGroup.id) {
+                return <HistoryItem> {(selectedGroup.tasks.find((st)=> st.id === item.taskId) || {}).name} -&gt; {users.find(user => user.id === item.userId).name} : {item.action} </HistoryItem>
+              }
+            })}
             <br /> <br />
           </TaskInfo> : <></>}
         </List>
@@ -392,13 +410,13 @@ const ProjectDetailsPage = (props) => {
            
             <SectionTitle>Select Task Group</SectionTitle>
             <br/>
-            <TaskSelect taskList={taskList} selectTask={groupSelectedWhileAdding} selectedTask={selectedGroup}/>
+            <TaskSelect taskList={taskList} selectTask={groupSelectedWhileAdding} selectedTask={selectedTMGroup}/>
             <Icon type="chevron-down" top={1} />
             <br/> <br/>
             <SectionTitle>Subtasks:</SectionTitle>
             <br /> <br/>
             {
-              selectedGroup.subtasks.map((subtask, index)=> {
+              selectedTMGroup.subtasks.map((subtask, index)=> {
                 return <Fragment key={index}> 
                   <ModalInput
                     defaultValue={subtask.name}

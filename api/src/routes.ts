@@ -45,6 +45,9 @@ export const attachPrivateRoutes = (app: any): void => {
   app.put('/tasksMaster/task', tasksMaster.updateGrp);
   app.get('/tasksMaster', tasksMaster.getAllTaskGrps);
 
+  app.get('/taskHistory/:projectId', tasks.getTaskHistory);
+
+
 
   app.post('/items', items.create); //Add item to project
   app.put('/items', items.update); // update item

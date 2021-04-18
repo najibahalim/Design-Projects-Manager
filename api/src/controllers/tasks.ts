@@ -1,5 +1,5 @@
 import { TaskStatus } from 'constants/projects';
-import { Issue, Item, Task, Users } from 'entities';
+import { Issue, Item, Task, TaskHistory, Users } from 'entities';
 import { catchErrors } from 'errors';
 import { captureNewTask, saveHistory } from 'utils/history';
 import { deleteEntity, createEntity, findEntityOrThrow, validateAndSaveEntity } from 'utils/typeorm';
@@ -68,4 +68,16 @@ export const update = catchErrors(async (req, res) => {
 export const remove = catchErrors(async (req, res) => {
   const issue = await deleteEntity(Issue, req.params.issueId);
   res.respond({ issue });
+});
+
+export const getTaskHistory = catchErrors(async (req, res) => {
+  const projectId = req.params.projectId;
+
+  const history = await TaskHistory.find({
+    where: [{ projectId }],
+    order: {
+      createdAt: "DESC"
+    }
+  });
+  res.respond(history);
 });
