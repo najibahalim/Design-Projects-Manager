@@ -8,6 +8,7 @@ import * as tasks from 'controllers/tasks';
 import * as tasksMaster from 'controllers/tasksMaster';
 import * as test from 'controllers/test';
 import * as users from 'controllers/users';
+import * as reports from 'controllers/reports';
 
 export const attachPublicRoutes = (app: any): void => {
   if (process.env.NODE_ENV === 'test') {
@@ -60,4 +61,10 @@ export const attachPrivateRoutes = (app: any): void => {
   app.get('/users', users.getAllUsers); // get all
 
   app.get('/currentUser', users.getCurrentUser);
+
+  app.get('/reports/task', reports.getTaskReport);
+  app.get('/reports/group', reports.getGroupReport);
+  app.get('/reports/item', reports.getItemReport);
+  app.get('/reports/project', reports.getProjectReport);
+  app.get('/reports/assignee', reports.getAssigneeReport);
 };

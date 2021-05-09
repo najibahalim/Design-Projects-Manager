@@ -13,16 +13,16 @@ export const IssueStatus = {
 
 export const TaskStatus = {
     ONHOLD: 'onhold',
-    NOTSTARTED: 'Not Started',
+    NOTSTARTED: 'notstarted',
     INPROGRESS: 'inprogress',
     DONE: 'done',
 };
 
 export const TaskStatusCopy = {
-    [TaskStatus.ONHOLD]: 'On Hold',
-    [TaskStatus.NOTSTARTED]: 'Not Started',
-    [TaskStatus.INPROGRESS]: 'In progress',
-    [TaskStatus.DONE]: 'Done',
+    [TaskStatus.ONHOLD]: 'onhold',
+    [TaskStatus.NOTSTARTED]: 'notstarted',
+    [TaskStatus.INPROGRESS]: 'inprogress',
+    [TaskStatus.DONE]: 'done',
 };
 
 export const IssuePriority = {

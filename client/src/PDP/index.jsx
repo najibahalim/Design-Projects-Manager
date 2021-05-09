@@ -85,9 +85,6 @@ const ProjectDetailsPage = (props) => {
   const users = userApiCall[0].data;
   const taskHistory = taskHistoryCall[0].data;
 
-  const updateLocalIssueDetails = fields =>
-    setLocalData(currentData => ({ project: { ...currentData.projects, ...fields } }));
-
   const updateFunction = async (arg1, arg2) => {
     console.log(arg1, arg2);
     const updatedSubTask = cloneDeep(selectedTask);
@@ -108,26 +105,24 @@ const ProjectDetailsPage = (props) => {
     });
     await taskHistoryCall[1]();
   }
-  const updateIssue = updatedFields => {
-    api.optimisticUpdate(`/projects/${params.projectId}`, {
-      updatedFields,
-      currentFields: project,
-      setLocalData: fields => {
-        updateLocalIssueDetails(fields);
-        updateLocalProjectIssues(project.id, fields);
-      },
-    });
-  };
 
   const groupSelectedWhileAdding = (grpId) => {
-    const newGroup = taskList.find(task => task.id === grpId);
+    const newGroup = cloneDeep(taskList.find(task => task.id === grpId));
     const subTaskList = [];
     newGroup.subtasks.forEach(task=>{
+      if(!task.id) {
+        console.log("NOOOO00");
+        console.log(task);
+      }
       subTaskList.push({
         name: task.name,
-        priority: "1",
         estimatedDays: task.estimatedDays,
-        checklist: task.checklist,
+        checklist: task.checklist.map((listItem) => {
+          return {
+            label: listItem,
+            isChecked: false
+          }
+        }),
         taskMasterId: task.id,
         groupID: grpId,
         itemId: selectedItem.id,
@@ -136,11 +131,30 @@ const ProjectDetailsPage = (props) => {
     });
     newGroup.subtasks = subTaskList;
     selectTMGroup(newGroup);
+    console.log(newGroup);
   }
 
-  const handleCheckboxChange = (event, arg2) => {
+  const handleCheckboxChange = async (event, arg2) => {
     console.log("Check box change ", event.target.checked);
     console.log("Check box change ", arg2);
+    const updatedSelectedTask = cloneDeep(selectedTask);
+    updatedSelectedTask.checklist[arg2].isChecked = event.target.checked;
+    updatedSelectedTask.action = "Checked " + updatedSelectedTask.checklist[arg2].label
+    api.optimisticUpdate(`/tasks`, {
+      updatedFields: updatedSelectedTask,
+      currentFields: selectedTask,
+      setLocalData: fields => {
+        setLocalData(currentData => {
+          const item = currentData.items.find((item) => item.id === fields.itemId);
+          const grp = item.taskGroups.find((group) => group.id === fields.groupID);
+          const task = grp.tasks.find((task) => task.id === fields.id);
+          Object.assign(task, fields);
+          return currentData;
+        });
+      },
+    });
+    await taskHistoryCall[1]();
+
   }
 
   const updateTaskPriority = async (newPriority) => {
@@ -181,11 +195,11 @@ const ProjectDetailsPage = (props) => {
     updatedSubTask.status = newStatus;
     console.log(newStatus);
     switch (newStatus) {
-      case "1":
+      case "inprogress":
         updatedSubTask.action = "Started";
-      case "2":
+      case "done":
         updatedSubTask.action = "Marked as Done";
-      case "3":
+      case "onhold":
         updatedSubTask.action = "Put on Hold";
     };
     api.optimisticUpdate(`/tasks`, {
@@ -225,11 +239,22 @@ const ProjectDetailsPage = (props) => {
     await taskHistoryCall[1]();
 
   }
-  const addNewTaskLocally = fields => {
+  const addNewTaskLocally = (fields, grp) => {
     setLocalData(currentData => {
-      if(fields.task && fields.task.item) {
-        const itemOfTaskAdded = currentData.items.find((item) => item.id === fields.task.item.id);
-        itemOfTaskAdded.tasks.push(fields.task);
+      debugger;
+      if (fields.tasks && fields.tasks[0] && fields.tasks[0].item) {
+        const itemOfTaskAdded = currentData.items.find((item) => item.id === fields.tasks[0].item.id);
+        fields.tasks.forEach(t => {
+          t.projectId = params.projectId;
+            t.itemId = t.item.id;
+            t.userId = t.assigneeId;
+            t.priority = t.priority.toString()
+        })
+        itemOfTaskAdded.taskGroups.push({
+          id: grp.id,
+          name: grp.name,
+          tasks: fields.tasks
+        });
       }
       return currentData;
     });
@@ -238,6 +263,7 @@ const ProjectDetailsPage = (props) => {
   // Add new Task calls
 
   const handleTaskCreationInput = (value, event, index, type) => {
+    console.log(type, index);
     switch(type) {
       case 'priority':
       case 'estimatedDays':
@@ -250,16 +276,43 @@ const ProjectDetailsPage = (props) => {
       default:
         console.log(type);
     }
+    console.log(selectedTMGroup);
+  }
+  const validateTasks = (taskArray) => {
+    let messages = [];
+    if(taskArray && taskArray.length > 0){
+      taskArray.forEach((item, index) => {
+        if(!item.name || !item.name.trim()) {
+          messages.push("Name cannot be empty for TASK " + index + 1);
+        }
+        if(!item.priority) {
+          messages.push("Priority not defined for TASK " + index + 1);
+        }
+        if (!item.estimatedDays) {
+          messages.push("Estimated Days must be greater than 1 for TASK " + index + 1);
+        }
+        if(!item.taskMasterId) {
+          messages.push("No Task Master reference found for" + index + 1);
+        }
+      });
+    }
+    return messages;
+    
   }
    const addNewTaskCall = async () => {
-     console.log(selectedGroup);
+     console.log(selectedTMGroup);
+     const validationMessages = validateTasks(selectedTMGroup.subtasks);
+     if(validationMessages.length > 0) {
+       alert(validationMessages.join("\n"));
+       return;
+     }
     try {
       addNewTask('working');
       await api.optimisticAdd(`/tasks`, {
         updatedFields: selectedTMGroup.subtasks,
-        currentFields: selectedTask,
+        currentFields: {},
         setLocalData: fields => {
-          addNewTaskLocally(fields);
+          addNewTaskLocally(fields, selectedTMGroup);
         },
       });
       await userApiCall[1]();
@@ -360,11 +413,11 @@ const ProjectDetailsPage = (props) => {
             {selectedTask.checklist && selectedTask.checklist.map((listItem, index) => {
               return <BlockLabel key={index}>
                 <Checkbox
-                  checked={index%2 === 0}
-                  itemId={23}
+                  checked={listItem.isChecked}
+                  itemId={index}
                   onChange={handleCheckboxChange}
                 />
-                <span>{listItem}</span>
+                <span>{listItem.label}</span>
               </BlockLabel>
 
             })}
@@ -426,7 +479,7 @@ const ProjectDetailsPage = (props) => {
                     onChange = {handleTaskCreationInput}
                   />
                   <TaskTitle style={{ marginLeft: '20px' }}>Priority:</TaskTitle>
-                  <Priority task={subtask} index={index} updateTaskPriority={handleTaskCreationInput} />
+                  <Priority task={{}} index={index} updateTaskPriority={handleTaskCreationInput} />
                   <TaskTitle style={{ marginLeft: '20px' }}>Assignee:</TaskTitle>
                   <Assignee task={subtask} index={index} updateTaskUser={handleTaskCreationInput} projectUsers={users} />
                   <br/>

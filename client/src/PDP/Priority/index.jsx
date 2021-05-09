@@ -33,11 +33,11 @@ const ProjectBoardIssueDetailsPriority = ({ task, updateTaskPriority, index, wid
   </Fragment>
 );
 
-const renderPriorityItem = (priority, isValue, showLabel) => (
-  <Priority isValue={isValue}>
+const renderPriorityItem = ((priority, isValue, showLabel) =>  {
+  return <Priority isValue={isValue}>
     <IssuePriorityIcon priority={priority} top={1}/>
     {showLabel ? <Label>{IssuePriorityCopy[priority]}</Label> : <></>}
-  </Priority>
+  </Priority>}
 );
 
 ProjectBoardIssueDetailsPriority.propTypes = propTypes;

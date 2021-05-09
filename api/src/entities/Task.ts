@@ -50,8 +50,8 @@ class Task extends BaseEntity {
   @Column('integer', { nullable: true })
   variance: number;
 
-  @Column("simple-array", { nullable: true })
-  checklist: string[];
+  @Column("simple-json", { nullable: true })
+  checklist: {label: string, isChecked: boolean}[];
 
   @Column('integer')
   taskMasterId: number;
