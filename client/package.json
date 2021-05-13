@@ -68,7 +68,8 @@
     "react-transition-group": "^4.3.0",
     "regenerator-runtime": "^0.13.3",
     "styled-components": "^4.4.1",
-    "sweet-pubsub": "^1.1.2"
+    "sweet-pubsub": "^1.1.2",
+    "xlsx": "^0.17.0"
   },
   "lint-staged": {
     "*.{js,jsx}": [

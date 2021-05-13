@@ -67,4 +67,5 @@ export const attachPrivateRoutes = (app: any): void => {
   app.get('/reports/item', reports.getItemReport);
   app.get('/reports/project', reports.getProjectReport);
   app.get('/reports/assignee', reports.getAssigneeReport);
+  app.get('/reports/list', reports.listReportInfo);
 };

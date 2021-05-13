@@ -6,6 +6,7 @@ import Project from 'Project';
 import Projects from 'Projects';
 import PDP from 'PDP';
 import TaskMaster from 'TaskMaster';
+import TaskReport from 'TaskReport';
 import Authenticate from 'Auth/Authenticate';
 import PageError from 'shared/components/PageError';
 
@@ -18,6 +19,7 @@ const Routes = () => (
       <Route path="/projects" component={Projects} />
       <Route path="/p/:projectId" component={PDP} />
       <Route path="/taskMaster" component={TaskMaster} />
+      <Route path="/reports/task" component={TaskReport} />
       <Route component={PageError} />
     </Switch>
   </Router>

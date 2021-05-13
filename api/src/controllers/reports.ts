@@ -1,7 +1,8 @@
-import {  Item, Task, TaskHistory, TaskMasterGroup, Users } from 'entities';
+import {  Item, Projects, Task, TaskHistory, TaskMasterGroup, Users } from 'entities';
 import { catchErrors } from 'errors';
 import { In } from 'typeorm';
 import { findEntities } from 'utils/typeorm';
+import { getGroupsList } from './tasksMaster';
 
 export const getTaskReport = catchErrors(async (req, res) => {
   const taskId = req.query.id;
@@ -240,5 +241,49 @@ const getItemNamesWithIds = async (itemIds: number[]): Promise<Map<number, strin
 
   return mapForItemNames;
 }
+
+export const listReportInfo = catchErrors(async (req, res) => {
+  console.log(req.query.id);
+  const [projects, groups] = await Promise.all([findEntities(Projects, {
+    relations: ['items', 'items.tasks'],
+  }), getGroupsList()]);
+  const projectsData: any[] = [];
+  projects.forEach((project) => {
+    const projectJSON: any = {};
+    projectJSON.id = project.id;
+    projectJSON.name = project.name;
+    projectJSON.items = [];
+    projectsData.push(projectJSON);
+    project.items.forEach((item: any) => {
+      const itemJSON: any = {
+        name: item.itemName,
+        id: item.id
+      }
+      projectJSON.items.push(itemJSON);
+      const groupsWithTasks: { id: number, name: string, tasks: any[] }[] = [];
+      item.tasks.forEach((task: any) => {
+        const existingGrp = groupsWithTasks.find(grp => grp.id === task.groupID);
+        if (existingGrp) {
+          existingGrp.tasks.push({
+            id: task.id,
+            name: task.name
+          });
+        } else {
+          groupsWithTasks.push({
+            id: task.groupID,
+            name: groups.find(grp => grp.id === task.groupID)?.name || "",
+            tasks: [{
+              id: task.id,
+              name: task.name
+            }]
+          });
+        }
+      });
+      itemJSON.taskGroups = groupsWithTasks;
+    });
+  })
+
+  res.respond(projectsData);
+});
 
 

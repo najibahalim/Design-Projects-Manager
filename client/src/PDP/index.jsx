@@ -135,11 +135,9 @@ const ProjectDetailsPage = (props) => {
   }
 
   const handleCheckboxChange = async (event, arg2) => {
-    console.log("Check box change ", event.target.checked);
-    console.log("Check box change ", arg2);
     const updatedSelectedTask = cloneDeep(selectedTask);
     updatedSelectedTask.checklist[arg2].isChecked = event.target.checked;
-    updatedSelectedTask.action = "Checked " + updatedSelectedTask.checklist[arg2].label
+    updatedSelectedTask.action = "Checked " + updatedSelectedTask.checklist[arg2].label;
     api.optimisticUpdate(`/tasks`, {
       updatedFields: updatedSelectedTask,
       currentFields: selectedTask,
