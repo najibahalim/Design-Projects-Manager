@@ -77,6 +77,7 @@ const ProjectDetailsPage = (props) => {
   const taskHistoryCall = useApi.get(`/taskHistory/${params.projectId}`);
 
 
+
   if (!data || !taskApiCallData[0].data) return <Loader />;
   if (error) return <PageError />;
 
@@ -84,7 +85,6 @@ const ProjectDetailsPage = (props) => {
   const taskList = taskApiCallData[0].data;
   const users = userApiCall[0].data;
   const taskHistory = taskHistoryCall[0].data;
-
   const updateFunction = async (arg1, arg2) => {
     console.log(arg1, arg2);
     const updatedSubTask = cloneDeep(selectedTask);

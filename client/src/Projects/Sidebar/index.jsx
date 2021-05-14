@@ -32,7 +32,7 @@ const ProjectSidebar = () => {
       {renderLinkItem('Project Board', 'board', '/projects')}
       {renderLinkItem('Task Master', 'settings', '/taskMaster')}
       <Divider />
-      {renderLinkItem('Performance Report', 'reports')}
+      {renderLinkItem('Performance Report', 'reports', '/reports/user')}
       {renderLinkItem('Task Report', 'component', '/reports/task')}
       {renderLinkItem('Pages', 'page')}
       {renderLinkItem('Reports', 'reports')}
