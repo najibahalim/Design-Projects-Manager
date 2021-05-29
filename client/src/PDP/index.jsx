@@ -239,7 +239,6 @@ const ProjectDetailsPage = (props) => {
   }
   const addNewTaskLocally = (fields, grp) => {
     setLocalData(currentData => {
-      debugger;
       if (fields.tasks && fields.tasks[0] && fields.tasks[0].item) {
         const itemOfTaskAdded = currentData.items.find((item) => item.id === fields.tasks[0].item.id);
         fields.tasks.forEach(t => {

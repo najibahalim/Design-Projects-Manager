@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import toast from 'shared/utils/toast';
 import api from 'shared/utils/api';
+import { useHistory } from 'react-router-dom';
+import { getStoredAuthToken, storeAuthToken } from 'shared/utils/authToken';
+import Projects from '../Projects';
+
+
 import {
   ProjectName,
   ProjectTexts,
@@ -10,42 +15,29 @@ import {ProjectAvatar } from 'shared/components';
 import PropTypes from 'prop-types';
 import './styles.css';
 
-async function loginUser(credentials) {
-  return fetch('http://localhost:8080/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(credentials)
-  })
-    .then(data => data.json()).catch(err => { throw err; })
-}
-
-export default function Login({ setToken }) {
+export default function Login() {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [errorMessage, setErrorMessage] = useState();
-
+  const history = useHistory();
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-
-      // const { authToken } = await api.post('/authentication/login', {
-      //   username,
-      //   password
-      // });
-
-      // setToken(authToken);
-      setToken("dfsdfsdf");
+      const { authToken, name } = await api.post('/authentication/login', {
+        id: username,
+        password
+      });
+      storeAuthToken(authToken);
+      localStorage.setItem('authToken', authToken);
+      localStorage.setItem('name', name);
+      history.push('/');
     } catch (err) {
-      setToken("sdfsdf");
       setErrorMessage(err.message);
     }
 
   }
-
+  if (!getStoredAuthToken()) {
   return (
-
     <div id="login" className="card">
       <div className="content">
         <ProjectInfo>
@@ -70,29 +62,11 @@ export default function Login({ setToken }) {
         <input type="submit" onClick={handleSubmit} />
       </div>
     </div>
-
-
-
-    // <div className="login-wrapper">
-    //   <h1>Please Log In</h1>
-    //   <form onSubmit={handleSubmit}>
-    //     <label>
-    //       <p>Username</p>
-    //       <input type="text" onChange={e => setUserName(e.target.value)} />
-    //     </label>
-    //     <label>
-    //       <p>Password</p>
-    //       <input type="password" onChange={e => setPassword(e.target.value)} />
-    //     </label>
-    //     <div>
-    //       <p style={{color:'red'}}>{errorMessage}</p>
-    //       <button type="submit">Submit</button>
-    //     </div>
-    //   </form>
-    // </div>
-  )
+  );
+  } else {
+    return <Projects></Projects>;
+  }
 }
 
 Login.propTypes = {
-  setToken: PropTypes.func.isRequired
 };

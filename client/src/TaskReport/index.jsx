@@ -43,7 +43,6 @@ const TaskReportPage = (props) => {
   const downloadReport = async (type, id, name) => {
     console.log(type, id);
     let url = "/reports/";
-    debugger;
 
     switch(type) {
       case "project":

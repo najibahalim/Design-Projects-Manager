@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
+
 import { ProjectCategoryCopy } from 'shared/constants/projects';
 import { Icon, ProjectAvatar } from 'shared/components';
 
@@ -16,6 +17,7 @@ import {
   LinkText,
   NotImplemented,
 } from './Styles';
+import { AssigneeAvatar } from 'Projects/Lists/List/Issue/Styles';
 
 const ProjectSidebar = () => {
 
@@ -26,9 +28,9 @@ const ProjectSidebar = () => {
         <ProjectTexts>
           <ProjectName>DiMan</ProjectName>
           <ProjectCategory>Design Management</ProjectCategory>
+         
         </ProjectTexts>
       </ProjectInfo>
-
       {renderLinkItem('Project Board', 'board', '/projects')}
       {renderLinkItem('Task Master', 'settings', '/taskMaster')}
       <Divider />
@@ -37,6 +39,19 @@ const ProjectSidebar = () => {
       {renderLinkItem('Pages', 'page')}
       {renderLinkItem('Reports', 'reports')}
       {renderLinkItem('Components', 'component')}
+      <Divider />
+      
+      <ProjectInfo>
+        <AssigneeAvatar name={localStorage.getItem("name")} size={24}></AssigneeAvatar>
+        <ProjectTexts>
+          <ProjectName>  Welcome {localStorage.getItem("name")}</ProjectName>
+          <ProjectCategory> {renderLinkItem('Logout', 'arrow-left-circle')} </ProjectCategory>
+        </ProjectTexts>
+        
+      </ProjectInfo>
+
+
+
     </Sidebar>
   );
 };

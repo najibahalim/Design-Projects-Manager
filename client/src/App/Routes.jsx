@@ -10,12 +10,13 @@ import TaskReport from 'TaskReport';
 import UserReport from 'UserReport';
 import Authenticate from 'Auth/Authenticate';
 import PageError from 'shared/components/PageError';
+import Login from 'Login';
 
 const Routes = () => (
   <Router history={history}>
     <Switch>
       <Redirect exact from="/" to="/project" />
-      <Route path="/authenticate" component={Authenticate} />
+      <Route path="/authenticate" component={Login} />
       <Route path="/project" component={Project} />
       <Route path="/projects" component={Projects} />
       <Route path="/p/:projectId" component={PDP} />

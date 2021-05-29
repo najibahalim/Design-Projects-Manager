@@ -3,7 +3,7 @@ import { catchErrors } from 'errors';
 import { deleteEntity, createEntity, findEntityOrThrow, validateAndSaveEntity } from 'utils/typeorm';
 
 export const getProjectIssues = catchErrors(async (req, res) => {
-  const { projectId } = req.currentUser;
+  // const { projectId } = req.currentUser;
   const { searchTerm } = req.query;
 
   let whereSQL = 'issue.projectId = :projectId';
@@ -14,7 +14,7 @@ export const getProjectIssues = catchErrors(async (req, res) => {
 
   const issues = await Issue.createQueryBuilder('issue')
     .select()
-    .where(whereSQL, { projectId, searchTerm: `%${searchTerm}%` })
+    .where(whereSQL, { projectId: 1, searchTerm: `%${searchTerm}%` })
     .getMany();
 
   res.respond({ issues });
