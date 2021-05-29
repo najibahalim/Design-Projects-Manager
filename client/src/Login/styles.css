@@ -47,6 +47,10 @@
     flex-direction: column;
     padding: 2em;
     height: 100%;
+    width: 30%;
+    margin-left: 35%;
+    margin-top: 5%;
+    border: 3px solid navajowhite;
 }
 
 #login .user,
@@ -56,7 +60,7 @@
 
 #login .content i {
     position: absolute;
-    top: 50%;
+    top: 53%;
     left: 20px;
     transform: translateY(-50%);
     color: #149ad1;
@@ -68,11 +72,11 @@
     font-size: 1.125rem;
     margin: .75em 0;
     width: 100%;
-    border-radius: 100px;
+    border-radius: 10px;
     border: none;
-    padding: .8em 1.5em .8em 2.75em;
+    padding: .8em 1.5em .9em 2.75em;
     color: #149ad1;
-    box-shadow: 1px 3px 10px #00000020, inset -1px -3px 10px #00000020, inset 1px 3px 10px #ffffff20;
+    box-shadow: 1px -4px 1px #00000020, inset -1px -3px 10px #00000020, inset 1px 3px 10px #ffffff20;
 }
 
 #login input[type="text"]::placeholder,
@@ -132,7 +136,7 @@
     border: none;
     color: #fff;
     padding: 1.1em 2.5em;
-    border-radius: 100px;
+    border-radius: 10px;
     margin: 1.2em auto;
     cursor: pointer;
     box-shadow: 2px 3px 10px rgba(0, 0, 0, .25), inset -2px -3px 10px rgba(0, 0, 0, .35), inset 2px 3px 10px rgba(255, 255, 255, .5);

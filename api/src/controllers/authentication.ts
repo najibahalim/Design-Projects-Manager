@@ -18,11 +18,21 @@ const getUserAccount = async (id: string, password: string): Promise<Users> => {
 
 
 export const login = catchErrors(async (_req, res) => {
-  const user = await getUserAccount(_req.body.id, _req.body.password);
-  res.respond({
-    authToken: signToken({ sub: user.id }),
-    name: user.name
-  });
+  try {
+    const user = await getUserAccount(_req.body.id, _req.body.password);
+    res.respond({
+      authToken: signToken({ sub: user.id }),
+      name: user.name
+    });
+  } catch(err) {
+    res.status(500).send({ error: {
+      message: 'Incorrect user id or password',
+      code: 'INTERNAL_ERROR',
+      status: 500,
+      data: {},
+    }});
+  }
+ 
 });
 
 

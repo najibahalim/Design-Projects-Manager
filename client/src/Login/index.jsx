@@ -11,7 +11,7 @@ import {
   ProjectTexts,
   ProjectInfo,
   ProjectCategory, } from '../Projects/Sidebar/Styles';
-import {ProjectAvatar } from 'shared/components';
+import {Icon, ProjectAvatar } from 'shared/components';
 import PropTypes from 'prop-types';
 import './styles.css';
 
@@ -47,17 +47,19 @@ export default function Login() {
             <ProjectCategory>Design Management</ProjectCategory>
           </ProjectTexts>
         </ProjectInfo>
-        <h2> Please Login</h2>
+        <h2> Login</h2>
         <div className="user">
-          <input type="text" placeholder="Username" onChange={e => setUserName(e.target.value)} />
-          <i className="fas fa-user"></i>
+          <input type="text" placeholder="User id" onChange={e => setUserName(e.target.value)} />
+          <Icon type='board'></Icon>
+          {/* <i className="fas fa-user"></i> */}
         </div>
         <div className="pass">
           <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
-          <i className="fas fa-lock"></i>
+          {/* <i className="fas fa-lock"></i> */}
+          <Icon type='more' size={3}></Icon>
         </div>
         <div className="else">
-          <span style={{ color: 'red' }}>{errorMessage}</span>
+          <span style={{ color: 'red', fontSize: '16px' }}>{errorMessage}</span>
         </div>
         <input type="submit" onClick={handleSubmit} />
       </div>
