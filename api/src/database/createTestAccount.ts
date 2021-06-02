@@ -1,4 +1,4 @@
-import { Comment, Issue, Project, User } from 'entities';
+import { Issue, Project, User } from 'entities';
 import { ProjectCategory } from 'constants/projects';
 import { IssueType, IssueStatus, IssuePriority } from 'constants/issues';
 import { createEntity } from 'utils/typeorm';
@@ -69,18 +69,18 @@ const seedIssues = (project: Project): Promise<Issue[]> => {
   return Promise.all(issues);
 };
 
-const seedComments = (issue: Issue, user: User): Promise<Comment> =>
-  createEntity(Comment, {
-    body: 'Comment body',
-    issueId: issue.id,
-    userId: user.id,
-  });
+// const seedComments = (issue: Issue, user: User): Promise<Comment> =>
+//   createEntity(Comment, {
+//     body: 'Comment body',
+//     issueId: issue.id,
+//     userId: user.id,
+//   });
 
 const createTestAccount = async (): Promise<User> => {
   const users = await seedUsers();
   const project = await seedProject(users);
-  const issues = await seedIssues(project);
-  await seedComments(issues[0], project.users[0]);
+  await seedIssues(project);
+  // await seedComments(issues[0], project.users[0]);
   return users[0];
 };
 

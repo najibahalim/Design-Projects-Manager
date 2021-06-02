@@ -10,11 +10,11 @@ import ProTip from './ProTip';
 import { Create, UserAvatar, Right, FakeTextarea } from './Styles';
 
 const propTypes = {
-  issueId: PropTypes.number.isRequired,
+  taskId: PropTypes.number.isRequired,
   fetchIssue: PropTypes.func.isRequired,
 };
 
-const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue }) => {
+const ProjectBoardIssueDetailsCommentsCreate = ({ taskId, fetchIssue }) => {
   const [isFormOpen, setFormOpen] = useState(false);
   const [isCreating, setCreating] = useState(false);
   const [body, setBody] = useState('');
@@ -24,7 +24,7 @@ const ProjectBoardIssueDetailsCommentsCreate = ({ issueId, fetchIssue }) => {
   const handleCommentCreate = async () => {
     try {
       setCreating(true);
-      await api.post(`/comments`, { body, issueId, userId: currentUser.id });
+      await api.post(`/comments`, { body, taskId, userId: currentUser.id });
       await fetchIssue();
       setFormOpen(false);
       setCreating(false);

@@ -7,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
   ManyToMany,
   JoinTable,
   RelationId,
@@ -17,7 +16,7 @@ import {
 
 import is from 'utils/validation';
 import { IssueType, IssueStatus, IssuePriority } from 'constants/issues';
-import { Comment, Project, User } from '.';
+import { Project, User } from '.';
 
 @Entity()
 class Issue extends BaseEntity {
@@ -80,12 +79,6 @@ class Issue extends BaseEntity {
 
   @Column('integer')
   projectId: number;
-
-  @OneToMany(
-    () => Comment,
-    comment => comment.issue,
-  )
-  comments: Comment[];
 
   @ManyToMany(
     () => User,

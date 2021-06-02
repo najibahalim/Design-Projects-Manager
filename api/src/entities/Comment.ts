@@ -9,7 +9,9 @@ import {
 } from 'typeorm';
 
 import is from 'utils/validation';
-import { Issue, User } from '.';
+import { Issue } from '.';
+import Task from './Task';
+import Users from './Users';
 
 @Entity()
 class Comment extends BaseEntity {
@@ -30,23 +32,23 @@ class Comment extends BaseEntity {
   updatedAt: Date;
 
   @ManyToOne(
-    () => User,
+    () => Users,
     user => user.comments,
   )
-  user: User;
+  user: Users;
 
   @Column('integer')
   userId: number;
 
   @ManyToOne(
-    () => Issue,
-    issue => issue.comments,
+    () => Task,
+    task => task.comments,
     { onDelete: 'CASCADE' },
   )
-  issue: Issue;
+  task: Issue;
 
   @Column('integer')
-  issueId: number;
+  taskId: number;
 }
 
 export default Comment;

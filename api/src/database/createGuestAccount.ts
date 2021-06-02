@@ -1,4 +1,4 @@
-import { Comment, Issue, Project, User } from 'entities';
+import { Issue, Project, User } from 'entities';
 import { ProjectCategory } from 'constants/projects';
 import { IssueType, IssueStatus, IssuePriority } from 'constants/issues';
 import { createEntity } from 'utils/typeorm';
@@ -144,57 +144,57 @@ const seedIssues = (project: Project): Promise<Issue[]> => {
   return Promise.all(issues);
 };
 
-const seedComments = (issues: Issue[], users: User[]): Promise<Comment[]> => {
-  const comments = [
-    createEntity(Comment, {
-      body: 'An old silent pond...\nA frog jumps into the pond,\nsplash! Silence again.',
-      issueId: issues[0].id,
-      userId: users[2].id,
-    }),
-    createEntity(Comment, {
-      body: 'Autumn moonlight-\na worm digs silently\ninto the chestnut.',
-      issueId: issues[1].id,
-      userId: users[2].id,
-    }),
-    createEntity(Comment, {
-      body: 'In the twilight rain\nthese brilliant-hued hibiscus -\nA lovely sunset.',
-      issueId: issues[2].id,
-      userId: users[2].id,
-    }),
-    createEntity(Comment, {
-      body: 'A summer river being crossed\nhow pleasing\nwith sandals in my hands!',
-      issueId: issues[3].id,
-      userId: users[2].id,
-    }),
-    createEntity(Comment, {
-      body: "Light of the moon\nMoves west, flowers' shadows\nCreep eastward.",
-      issueId: issues[4].id,
-      userId: users[2].id,
-    }),
-    createEntity(Comment, {
-      body: 'In the moonlight,\nThe color and scent of the wisteria\nSeems far away.',
-      issueId: issues[5].id,
-      userId: users[2].id,
-    }),
-    createEntity(Comment, {
-      body: 'O snail\nClimb Mount Fuji,\nBut slowly, slowly!',
-      issueId: issues[6].id,
-      userId: users[2].id,
-    }),
-    createEntity(Comment, {
-      body: 'Everything I touch\nwith tenderness, alas,\npricks like a bramble.',
-      issueId: issues[7].id,
-      userId: users[2].id,
-    }),
-  ];
-  return Promise.all(comments);
-};
+// const seedComments = (issues: Issue[], users: User[]): Promise<Comment[]> => {
+//   const comments = [
+//     createEntity(Comment, {
+//       body: 'An old silent pond...\nA frog jumps into the pond,\nsplash! Silence again.',
+//       issueId: issues[0].id,
+//       userId: users[2].id,
+//     }),
+//     createEntity(Comment, {
+//       body: 'Autumn moonlight-\na worm digs silently\ninto the chestnut.',
+//       issueId: issues[1].id,
+//       userId: users[2].id,
+//     }),
+//     createEntity(Comment, {
+//       body: 'In the twilight rain\nthese brilliant-hued hibiscus -\nA lovely sunset.',
+//       issueId: issues[2].id,
+//       userId: users[2].id,
+//     }),
+//     createEntity(Comment, {
+//       body: 'A summer river being crossed\nhow pleasing\nwith sandals in my hands!',
+//       issueId: issues[3].id,
+//       userId: users[2].id,
+//     }),
+//     createEntity(Comment, {
+//       body: "Light of the moon\nMoves west, flowers' shadows\nCreep eastward.",
+//       issueId: issues[4].id,
+//       userId: users[2].id,
+//     }),
+//     createEntity(Comment, {
+//       body: 'In the moonlight,\nThe color and scent of the wisteria\nSeems far away.',
+//       issueId: issues[5].id,
+//       userId: users[2].id,
+//     }),
+//     createEntity(Comment, {
+//       body: 'O snail\nClimb Mount Fuji,\nBut slowly, slowly!',
+//       issueId: issues[6].id,
+//       userId: users[2].id,
+//     }),
+//     createEntity(Comment, {
+//       body: 'Everything I touch\nwith tenderness, alas,\npricks like a bramble.',
+//       issueId: issues[7].id,
+//       userId: users[2].id,
+//     }),
+//   ];
+//   return Promise.all(comments);
+// };
 
 const createGuestAccount = async (): Promise<User> => {
   const users = await seedUsers();
   const project = await seedProject(users);
-  const issues = await seedIssues(project);
-  await seedComments(issues, project.users);
+  await seedIssues(project);
+  // await seedComments(issues, project.users);
   return users[2];
 };
 

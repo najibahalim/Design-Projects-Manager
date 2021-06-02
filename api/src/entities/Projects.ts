@@ -13,7 +13,6 @@ import {
 
 import is from 'utils/validation';
 import { IssueStatus, IssuePriority } from 'constants/issues';
-import { Comment } from '.';
 import Item from './Item';
 
 @Entity()
@@ -64,13 +63,6 @@ class Projects extends BaseEntity {
     item => item.project,
   )
   items: Item[];
-
-
-  @OneToMany(
-    () => Comment,
-    comment => comment.issue,
-  )
-  comments: Comment[];
 
   @BeforeInsert()
   @BeforeUpdate()

@@ -53,7 +53,7 @@ class Item extends BaseEntity {
 
   @OneToMany(
     () => Comment,
-    comment => comment.issue,
+    comment => comment.task,
   )
   comments: Comment[];
 

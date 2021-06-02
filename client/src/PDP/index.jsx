@@ -81,10 +81,24 @@ const ProjectDetailsPage = (props) => {
   if (!data || !taskApiCallData[0].data) return <Loader />;
   if (error) return <PageError />;
 
-  const project = data;
+  let project = data;
   const taskList = taskApiCallData[0].data;
   const users = userApiCall[0].data;
   const taskHistory = taskHistoryCall[0].data;
+
+  const updateCommentDisplay = async () => {
+    const projectC = await api.get(`/projects/${params.projectId}`);
+    project = projectC;
+    const s_item = projectC.items.find(i => i.id === selectedItem.id);
+    const s_group = (s_item.taskGroups.find(grp => grp.id === selectedGroup.id));
+    const s_Task = (s_group.tasks.find(grp => grp.id === selectedTask.id));
+    selectedItem.taskGroups = s_item.taskGroups;
+    selectedGroup.tasks = s_group.tasks;
+    selectedTask.comments = s_Task.comments;
+    const cTask = selectedTask;
+    selectNewTask({});
+    selectNewTask(selectedTask);
+  }
   const updateFunction = async (arg1, arg2) => {
     console.log(arg1, arg2);
     const updatedSubTask = cloneDeep(selectedTask);
@@ -419,9 +433,11 @@ const ProjectDetailsPage = (props) => {
 
             })}
   
-            <Comments task={{ id:1,comments: [{ updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 1, body: 'This is a comment', user: { name: 'Najiba' } }, { updatedAt: new Date().toString(), createdAt: new Date().toString(), id: 2, body: 'This is a comment 2', user: { name: 'Najiba' } }]}} 
-            fetchTask={taskApiCallData[1]}></Comments>
+            <Comments task={selectedTask}
+              fetchTask={updateCommentDisplay}></Comments>
+            
             <br /> <br />
+
             <SectionTitle>Task History:</SectionTitle>
             {taskHistory.map((item)=> {
               if(item.taskId === selectedTask.id) {
