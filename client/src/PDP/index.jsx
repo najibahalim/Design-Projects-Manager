@@ -207,12 +207,15 @@ const ProjectDetailsPage = (props) => {
     updatedSubTask.status = newStatus;
     console.log(newStatus);
     switch (newStatus) {
-      case "inprogress":
+      case "In Progress":
         updatedSubTask.action = "Started";
-      case "done":
+        break;
+      case "Done":
         updatedSubTask.action = "Marked as Done";
-      case "onhold":
+        break;
+      case "On Hold":
         updatedSubTask.action = "Put on Hold";
+        break;
     };
     api.optimisticUpdate(`/tasks`, {
       updatedFields: updatedSubTask,

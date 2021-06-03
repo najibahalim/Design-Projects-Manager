@@ -12,17 +12,17 @@ export const IssueStatus = {
 };
 
 export const TaskStatus = {
-    ONHOLD: 'onhold',
-    NOTSTARTED: 'notstarted',
-    INPROGRESS: 'inprogress',
-    DONE: 'done',
+    ONHOLD: 'On Hold',
+    NOTSTARTED: 'Not Started',
+    INPROGRESS: 'In Progress',
+    DONE: 'Done',
 };
 
 export const TaskStatusCopy = {
-    [TaskStatus.ONHOLD]: 'onhold',
-    [TaskStatus.NOTSTARTED]: 'notstarted',
-    [TaskStatus.INPROGRESS]: 'inprogress',
-    [TaskStatus.DONE]: 'done',
+    [TaskStatus.ONHOLD]: 'On Hold',
+    [TaskStatus.NOTSTARTED]: 'Not Started',
+    [TaskStatus.INPROGRESS]: 'In Progress',
+    [TaskStatus.DONE]: 'Done',
 };
 
 export const IssuePriority = {

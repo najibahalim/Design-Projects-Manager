@@ -54,6 +54,7 @@ export const update = catchErrors(async (req, res) => {
   taskCreationBody.taskMasterId = req.body.taskMasterId;
   taskCreationBody.checklist = req.body.checklist;
   taskCreationBody.groupID = req.body.groupID;
+  taskCreationBody.status = req.body.status;
   const [taskItem, taskUser] = await Promise.all([
     findEntityOrThrow(Item, req.body.itemId),
     findEntityOrThrow(Users, req.body.userId)
