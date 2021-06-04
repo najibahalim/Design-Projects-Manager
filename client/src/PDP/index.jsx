@@ -236,7 +236,7 @@ const ProjectDetailsPage = (props) => {
   const updateTaskUser = async (newUserId) => {
     const updatedSubTask = cloneDeep(selectedTask);
     updatedSubTask.userId = newUserId;
-    updatedSubTask.action = "Assigned";
+    updatedSubTask.action = "Assigned to " + (users.find(u => u.id === newUserId) || {}).name;
     await api.optimisticUpdate(`/tasks`, {
       updatedFields: updatedSubTask,
       currentFields: selectedTask,
