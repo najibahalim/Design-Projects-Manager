@@ -381,12 +381,16 @@ const ProjectDetailsPage = (props) => {
                 <AccordianBody>
                   {isGrpSelected && group.tasks.map((task, index) => {
                     const isSelected = selectedTask.id === task.id;
+                    let daysLeft = task.estimatedDays - task.actualDays - Math.round((new Date().getTime() - new Date(task.startedOn).getTime()) / (1000 * 60 * 60 * 24));
+                    if(daysLeft < 0) {
+                      daysLeft = 0;
+                    }
                     return <TaskItem selected={isSelected} key={index} onClick={() => selectNewTask(task)} >
                       <TaskLine>
 
                         <Priority task={task} index={index} width={200} updateTaskPriority={updateTaskPriority} />
                         <TaskTitle>{task.name}</TaskTitle>
-                        <EstimationBox>3/3/2020 - 3 days left</EstimationBox>
+                        <EstimationBox>{daysLeft} day/(s) left</EstimationBox>
                       </TaskLine>
 
                       <TaskLine direction={'row'}>
@@ -413,7 +417,7 @@ const ProjectDetailsPage = (props) => {
           {selectedTask.id ? <TaskInfo>
             <TaskHeading>{selectedTask.name}</TaskHeading>
 
-            <SectionTitle>Duration: </SectionTitle>
+            <SectionTitle>Started On: {new Date(selectedTask.startedOn).toLocaleDateString("en-GB", { month: 'long', year: "numeric", day: "numeric" })} </SectionTitle>
             <br /> <br />
             <SectionTitle>Estimated Days:</SectionTitle>
             <Input key={selectedTask.id + 'estimatedDays'} identifier={"estimatedDays"} value={selectedTask.estimatedDays} updateValue={updateFunction}/>

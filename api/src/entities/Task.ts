@@ -38,6 +38,10 @@ class Task extends BaseEntity {
   @Column('varchar')
   status: TaskStatus;
 
+
+  @Column('varchar', {nullable: true})
+  prevStatus: TaskStatus;
+
   @Column('varchar')
   priority: IssuePriority;
 
@@ -59,6 +63,9 @@ class Task extends BaseEntity {
 
   @Column('integer', { nullable: true })
   groupID: number;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  startedOn: Date;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
@@ -83,6 +90,13 @@ class Task extends BaseEntity {
   @BeforeInsert()
   @BeforeUpdate()
   setVariance = (): void => {
+    if(this.status === TaskStatus.INPROGRESS && this.prevStatus !== TaskStatus.INPROGRESS) {
+      this.startedOn = new Date();
+    } else if ((this.status === TaskStatus.NOTSTARTED || this.status === TaskStatus.DONE || this.status === TaskStatus.ONHOLD ) && this.prevStatus === TaskStatus.INPROGRESS) {
+      const currentDate = new Date();
+      this.actualDays += Math.floor((currentDate.getTime() - this.startedOn.getTime()) / (1000 * 60 * 60 * 24));
+    }
+    this.prevStatus = this.status;
     const diff = (this.actualDays ?? 0) - this.estimatedDays;
     this.variance = diff > 0 ? diff : 0;
   };
