@@ -1,18 +1,14 @@
 import { catchErrors } from 'errors';
-
 import { Users } from 'entities';
-import { createEntity, updateEntity, findEntities } from 'utils/typeorm';
+import { createEntity, updateEntity } from 'utils/typeorm';
 
 export const getAllUsers = catchErrors(async (req, res) => {
   console.log(req.currentUser.id);
-  const users = await findEntities(Users, {
-    order: {
-      updatedAt: "DESC",
-    }, relations: ['tasks']
-  });
-  res.respond(
-    users
-  );
+  const users = await Users.createQueryBuilder("user")
+              .leftJoinAndSelect("user.tasks", "task", "task.status != :status", {status: "Done"})
+              .getMany();
+
+  res.respond(users);
 });
 
 export const update = catchErrors(async (req, res) => {
