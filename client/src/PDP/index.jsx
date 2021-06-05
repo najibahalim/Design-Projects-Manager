@@ -206,6 +206,11 @@ const ProjectDetailsPage = (props) => {
     const updatedSubTask = cloneDeep(selectedTask);
     updatedSubTask.status = newStatus;
     console.log(newStatus);
+    const isAllChecked = updatedSubTask.checklist.every(item => item.isChecked);
+    if(!isAllChecked ) {
+      alert("All the checklist Items must be completed");
+      return;
+    }
     switch (newStatus) {
       case "In Progress":
         updatedSubTask.action = "Started";
@@ -427,7 +432,7 @@ const ProjectDetailsPage = (props) => {
             <br /> <br />
             <SectionTitle>Variance: <TitleText>{selectedTask.variance}</TitleText></SectionTitle>
             <br /> <br />
-            <SectionTitle>Check List:</SectionTitle> <br /> <br />
+            <SectionTitle>Check List:  &nbsp;&nbsp;<Button icon="task" disabled={selectedTask.status === "Done" || !selectedTask.checklist.every(task => task.isChecked)} iconSize={24} variant="success" onClick={() => updateTaskStatus("Done")} >Mark as Done </Button> </SectionTitle> <br /> <br />
             {selectedTask.checklist && selectedTask.checklist.map((listItem, index) => {
               return <BlockLabel key={index}>
                 <Checkbox
