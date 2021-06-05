@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { removeStoredAuthToken } from 'shared/utils/authToken';
+import history from 'browserHistory';
 
 
 import { ProjectCategoryCopy } from 'shared/constants/projects';
-import { Icon, ProjectAvatar } from 'shared/components';
+import { Button, Icon, ProjectAvatar } from 'shared/components';
 
 import {
   Sidebar,
@@ -45,7 +47,7 @@ const ProjectSidebar = () => {
         <AssigneeAvatar name={localStorage.getItem("name")} size={24}></AssigneeAvatar>
         <ProjectTexts>
           <ProjectName>  Welcome {localStorage.getItem("name")}</ProjectName>
-          <ProjectCategory> {renderLinkItem('Logout', 'arrow-left-circle')} </ProjectCategory>
+          <ProjectCategory> <Button onClick={() => { removeStoredAuthToken(); history.push('/authenticate');} }> <Icon type="arrow-left-circle"></Icon> Logout</Button> </ProjectCategory>
         </ProjectTexts>
         
       </ProjectInfo>

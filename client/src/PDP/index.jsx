@@ -364,7 +364,6 @@ const ProjectDetailsPage = (props) => {
               <StyledIcon type="chevron-right" top={1} />
               <br/>
               <ItemInfo>{item.taskGroups.length} Task Groups/(s)</ItemInfo>
-              <ItemInfo align={'right'} color={'yellowgreen'}>5 Done</ItemInfo>
             </TaskItem> 
           })}
           
@@ -420,9 +419,9 @@ const ProjectDetailsPage = (props) => {
         <List>
           {/* Task details */}
           {selectedTask.id ? <TaskInfo>
-            <TaskHeading>{selectedTask.name}</TaskHeading>
+            <TaskHeading>{selectedTask.name}<TitleText>{selectedTask.status}</TitleText></TaskHeading>
 
-            <SectionTitle>Started On: {new Date(selectedTask.startedOn).toLocaleDateString("en-GB", { month: 'long', year: "numeric", day: "numeric" })} </SectionTitle>
+            <SectionTitle>Started On: {new Date(selectedTask.startedOn).toLocaleDateString("en-GB", { month: 'long', year: "numeric", day: "numeric", hour12: true, hour: "2-digit", minute: "2-digit" })} </SectionTitle>
             <br /> <br />
             <SectionTitle>Estimated Days:</SectionTitle>
             <Input key={selectedTask.id + 'estimatedDays'} identifier={"estimatedDays"} value={selectedTask.estimatedDays} updateValue={updateFunction}/>

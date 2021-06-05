@@ -30,7 +30,7 @@ export default function Login() {
       storeAuthToken(authToken);
       localStorage.setItem('authToken', authToken);
       localStorage.setItem('name', name);
-      history.push('/');
+      history.push('/projects');
     } catch (err) {
       setErrorMessage(err.message);
     }
