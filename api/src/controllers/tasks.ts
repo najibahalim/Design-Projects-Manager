@@ -1,8 +1,8 @@
 import { TaskStatus } from 'constants/projects';
 import { Issue, Item, Task, TaskHistory, Users } from 'entities';
 import { catchErrors } from 'errors';
-import { captureNewTask, saveHistory } from 'utils/history';
-import { deleteEntity, createEntity, findEntityOrThrow, validateAndSaveEntity } from 'utils/typeorm';
+import { captureNewTask, saveHistory, trackAutomaticUpdates } from 'utils/history';
+import { deleteEntity, createEntity, findEntityOrThrow, validateAndSaveEntity, findEntities } from 'utils/typeorm';
 
 
 export const getIssueWithUsersAndComments = catchErrors(async (req, res) => {
@@ -59,12 +59,31 @@ export const update = catchErrors(async (req, res) => {
     findEntityOrThrow(Item, req.body.itemId),
     findEntityOrThrow(Users, req.body.userId)
   ]);
+  if (taskCreationBody.status === TaskStatus.INPROGRESS && taskCreationBody.prevStatus !== TaskStatus.INPROGRESS) {
+    await markHoldTasksInProgress(req.body.userId, req.currentUser.id);
+  }
   taskCreationBody.item = taskItem;
   taskCreationBody.assignee = taskUser;
   const task = await validateAndSaveEntity(taskCreationBody);
   await saveHistory(taskCreationBody, req, task.id);
+
+
   res.respond({ task });
 });
+
+const markHoldTasksInProgress = async (userId: number, currentUserId: number) => {
+  const tasks = await findEntities(Task, {
+    relations: ['assignee'],
+    loadRelationIds: true,
+    where: [{ assignee: { id: userId }, status: TaskStatus.INPROGRESS }],
+  });
+  for(const task of tasks) {
+    task.status = TaskStatus.ONHOLD;
+    const updatedTask = await validateAndSaveEntity(task);
+    await trackAutomaticUpdates(updatedTask, currentUserId)
+  }
+
+}
 
 export const remove = catchErrors(async (req, res) => {
   const issue = await deleteEntity(Issue, req.params.issueId);

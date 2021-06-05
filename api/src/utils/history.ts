@@ -1,6 +1,6 @@
-import { Task } from "entities";
+import { Item, Task } from "entities";
 import TaskHistory from "entities/TaskHistory";
-import { validateAndSaveEntity } from "./typeorm";
+import { findEntity, validateAndSaveEntity } from "./typeorm";
 
 export const saveHistory = async (taskCreationBody: Task, req: any, taskId: number) => {
     const taskHistory = new TaskHistory();
@@ -11,6 +11,22 @@ export const saveHistory = async (taskCreationBody: Task, req: any, taskId: numb
     taskHistory.groupId = taskCreationBody.groupID,
     taskHistory.projectId = req.body.projectId,
     taskHistory.userId = req.currentUser.id
+    return validateAndSaveEntity(taskHistory);
+}
+
+export const trackAutomaticUpdates = async (task: Task, currentUserId: number) => {
+    const projectId = await findEntity(Item, Number(task.item) ,{
+        loadRelationIds: true
+    });
+
+    const taskHistory = new TaskHistory();
+    taskHistory.taskId = task.id,
+    taskHistory.itemId = Number(task.item),
+    taskHistory.action = "Automatic transtion to HOLD",
+    taskHistory.assigneeId = task.assigneeId,
+    taskHistory.groupId = task.groupID,
+    taskHistory.projectId = Number(projectId.project),
+    taskHistory.userId = currentUserId
     return validateAndSaveEntity(taskHistory);
 }
 

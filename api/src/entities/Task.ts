@@ -94,7 +94,7 @@ class Task extends BaseEntity {
       this.startedOn = new Date();
     } else if ((this.status === TaskStatus.NOTSTARTED || this.status === TaskStatus.DONE || this.status === TaskStatus.ONHOLD ) && this.prevStatus === TaskStatus.INPROGRESS) {
       const currentDate = new Date();
-      this.actualDays += Math.floor((currentDate.getTime() - this.startedOn.getTime()) / (1000 * 60 * 60 * 24));
+      this.actualDays += Math.round((currentDate.getTime() - this.startedOn.getTime()) / (1000 * 60 * 60 * 24));
     }
     this.prevStatus = this.status;
     const diff = (this.actualDays ?? 0) - this.estimatedDays;
