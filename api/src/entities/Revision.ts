@@ -19,9 +19,9 @@ import {IssuePriority } from 'constants/issues';
 import { Comment } from '.';
 import Users from './Users';
 import { TaskStatus } from 'constants/projects';
-import Revision from './Revision';
+import Task from './Task';
 @Entity()
-class Task extends BaseEntity {
+class Revision extends BaseEntity {
   static validations = {
     name: [is.required(), is.maxLength(200)],
     estimatedDays: [is.required()],
@@ -79,7 +79,7 @@ class Task extends BaseEntity {
 
   @ManyToOne(() => Users, user => user.tasks)
   assignee: Users;
-  @RelationId((task: Task) => task.assignee)
+  @RelationId((task: Revision) => task.assignee)
   assigneeId: number;
   
   @OneToMany(
@@ -88,12 +88,11 @@ class Task extends BaseEntity {
   )
   comments: Comment[];
 
-
-  @OneToMany(
-    () => Revision,
-    revision => revision.task,
+  @ManyToOne(
+    () => Task,
+    task => task.revisions,
   )
-  revisions: Revision[];
+  task: Task;
  
   @BeforeInsert()
   @BeforeUpdate()
@@ -110,4 +109,4 @@ class Task extends BaseEntity {
   };
 }
 
-export default Task;
+export default Revision;

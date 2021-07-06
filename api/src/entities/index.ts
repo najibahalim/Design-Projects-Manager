@@ -10,5 +10,6 @@ export { default as Users } from './Users';
 export { default as Item } from './Item';
 export { default as TaskMasterGroup } from './TaskMasterGroup';
 export { default as TaskHistory } from './TaskHistory';
+export { default as Revision } from './Revision';
 
 // select p.PROJECTID, p.PROJECT_NAME, a.ACC_ID, a.ACC_NAME from PROJECT as p JOIN ACCOUNT as a on a.ACC_ID = p.ACC_ID;

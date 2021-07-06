@@ -1,6 +1,6 @@
 import {  Item, Projects, Task, TaskHistory, TaskMasterGroup, Users } from 'entities';
 import { catchErrors } from 'errors';
-import { In } from 'typeorm';
+import { Between, In } from 'typeorm';
 import { findEntities } from 'utils/typeorm';
 import { getGroupsList } from './tasksMaster';
 
@@ -33,25 +33,45 @@ export const getTaskReport = catchErrors(async (req, res) => {
 
 export const getAssigneeReport = catchErrors(async (req, res) => {
   const assigneeId = req.query.id;
+  let fromDate = new Date(req.query.fromDate); 
+  let toDate = new Date(req.query.toDate); 
+  if(!fromDate.getTime()) {
+    fromDate = new Date(-8640000000000000);
+  }
+  if (!toDate.getTime()) {
+    toDate = new Date(8640000000000000);
+  }
   const history = await TaskHistory.find({
-    where: [{ assigneeId}],
+    where: [{ assigneeId, createdAt: Between(fromDate, toDate)}],
     order: {
       createdAt: "ASC"
     }
   });
   const userIdList = new Set<number>();
   const taskIdList = new Set<number>();
+  const groupIdList = new Set<number>();
+  const itemIdList = new Set<number>();
+  const projectIdList = new Set<number>();
 
   history.forEach(item => {
     userIdList.add(item.userId);
     taskIdList.add(item.taskId);
+    groupIdList.add(item.groupId);
+    itemIdList.add(item.itemId);
+    projectIdList.add(item.projectId);
   });
-  const [userIdMap, taskIdMap] = await Promise.all([getUserNamesWithIds(Array.from(userIdList)), 
-  getTaskNamesWithIds(Array.from(taskIdList))]);
+  const [userIdMap, taskIdMap, itemIdMap, groupIdMap, projectIdMap] = await Promise.all([getUserNamesWithIds(Array.from(userIdList)), 
+  getTaskNamesWithIds(Array.from(taskIdList)),
+    getItemNamesWithIds(Array.from(itemIdList)),
+    getGroupNamesWithIds(Array.from(groupIdList)),
+    getProjectNamesWithIds(Array.from(projectIdList))]);
  
   const report: any = [];
   history.forEach(item => {
    report.push({
+     Project: projectIdMap.get(item.projectId) || 'Undefined',
+     Item: itemIdMap.get(item.itemId) || 'Undefined',
+     TaskGroup: groupIdMap.get(item.groupId) || 'Undefined',
      Task: taskIdMap.get(item.taskId) || 'Undefined',
      User: userIdMap.get(item.userId) || 'Undefined',
      Date: new Date(item.createdAt).toLocaleDateString("en-GB", { month: 'long', year: "numeric", day: "numeric" }),
@@ -185,6 +205,22 @@ const getUserNamesWithIds = async (userIds: number[]): Promise<Map<number, strin
     userIdMap.set(user.id, user.name);
   });
   return userIdMap;
+}
+
+const getProjectNamesWithIds = async (projectIds: number[]): Promise<Map<number, string>> => {
+  const projects = await findEntities(Projects, {
+    order: {
+      updatedAt: "DESC",
+    }, select: ["name", "id"],
+    where: {
+      id: In(projectIds)
+    }
+  });
+  const projectIdMap = new Map<number, string>();
+  projects.forEach(proj => {
+    projectIdMap.set(proj.id, proj.name);
+  });
+  return projectIdMap;
 }
 
 const getGroupNamesWithIds = async (groupIds: number[]): Promise<Map<number, string>> => {

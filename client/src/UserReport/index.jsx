@@ -46,7 +46,7 @@ const UserReportPage = (props) => {
   //   id: data[0].id
   // })
   const downloadReport = async () => {
-    const url = "/reports/assignee?id=" + user.id;
+    const url = "/reports/assignee?"+ `id=${user.id}&fromDate=${fromDate}&toDate=${toDate}`;
     const report = await api.get(url);
     const worksheet = XLSX.utils.json_to_sheet(report);
     const wb = XLSX.utils.book_new();
@@ -72,7 +72,7 @@ const UserReportPage = (props) => {
     if(par2 === "from") {
       setFromDate(par1.target.value);
     } else if(par2 === "to") {
-      setFromDate(par1.target.value);
+      setToDate(par1.target.value);
     }
   }
   return (

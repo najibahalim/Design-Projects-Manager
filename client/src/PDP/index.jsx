@@ -211,6 +211,8 @@ const ProjectDetailsPage = (props) => {
       alert("All the checklist Items must be completed");
       return;
     }
+    // const desc = window.prompt("Enter verification reason");
+    // console.log(desc);
     switch (newStatus) {
       case "In Progress":
         updatedSubTask.action = "Started";
@@ -431,7 +433,14 @@ const ProjectDetailsPage = (props) => {
             <br /> <br />
             <SectionTitle>Variance: <TitleText>{selectedTask.variance}</TitleText></SectionTitle>
             <br /> <br />
-            <SectionTitle>Check List:  &nbsp;&nbsp;<Button icon="task" disabled={selectedTask.status === "Done" || !selectedTask.checklist.every(task => task.isChecked)} iconSize={24} variant="success" onClick={() => updateTaskStatus("Done")} >Mark as Done </Button> </SectionTitle> <br /> <br />
+            <Button icon="task" disabled={selectedTask.status === "Done" || !selectedTask.checklist.every(task => task.isChecked)} iconSize={24} variant="success" onClick={() => updateTaskStatus("Done")} >Mark as Done </Button>
+            <Button icon="story" disabled={selectedTask.status === "Done"} iconSize={24} variant="secondary" onClick={() => updateTaskStatus("Done")} > <u>Create Revision </u></Button>
+            <br /><br />
+            <SectionTitle>Check List:
+
+            
+              
+              </SectionTitle> <br /> <br />
             {selectedTask.checklist && selectedTask.checklist.map((listItem, index) => {
               return <BlockLabel key={index}>
                 <Checkbox
