@@ -28,7 +28,7 @@ export const getProjectsWithUsers = catchErrors(async (req, res) => {
 export const getProjectWithId = catchErrors(async (req, res) => {
   console.log(req.params.projectId);
   const [project, groups] = await Promise.all([findEntityOrThrow(Projects, req.params.projectId, {
-    relations: ['items', 'items.tasks', 'items.tasks.comments', 'items.tasks.comments.user']
+    relations: ['items', 'items.tasks', 'items.tasks.comments', 'items.tasks.comments.user', 'items.tasks.revisions']
   }), getGroupsList() ]);
   const formattedProject: any = project;
   formattedProject.items.forEach((item: any) => {

@@ -202,22 +202,27 @@ const ProjectDetailsPage = (props) => {
 
 
   }
+
+  const createRevision = async() => {
+    const desc = window.prompt("Enter verification reason");
+    console.log(desc);
+  }
   const updateTaskStatus = async (newStatus) => {
     const updatedSubTask = cloneDeep(selectedTask);
     updatedSubTask.status = newStatus;
     console.log(newStatus);
     const isAllChecked = updatedSubTask.checklist.every(item => item.isChecked);
-    if(!isAllChecked ) {
-      alert("All the checklist Items must be completed");
-      return;
-    }
-    // const desc = window.prompt("Enter verification reason");
-    // console.log(desc);
+    
+   
     switch (newStatus) {
       case "In Progress":
         updatedSubTask.action = "Started";
         break;
       case "Done":
+        if (!isAllChecked) {
+          alert("All the checklist Items must be completed");
+          return;
+        }
         updatedSubTask.action = "Marked as Done";
         break;
       case "On Hold":
@@ -292,6 +297,7 @@ const ProjectDetailsPage = (props) => {
         selectedTMGroup.subtasks[index][type] = Number(value);
         break;
       case 'name':
+      case 'description':
         selectedTMGroup.subtasks[index][type] = value;
         break;
       default:
@@ -406,8 +412,39 @@ const ProjectDetailsPage = (props) => {
                         <Status task={task} width={150} updateTaskStatus={updateTaskStatus} />
 
                       </TaskLine>
+                      <TaskLine direction = {'row-reverse'}>
+                        <TitleText>
+                          Revisions <b>({task.revisions && task.revisions.length})</b>
+                          <Icon type="chevron-down" top={2}/>
+                        </TitleText>
+                       
+                      </TaskLine>
+
+                      {/* Revision starts */}
+                      {isSelected ? task.revisions.map((rev, index) => {
+                        const isRevSelected = selectedTask.id === rev.id;
+                        return <TaskItem selected={isRevSelected} key={index} onClick={() => console.log("sdfsdf")} >
+                          <TaskLine>
+
+                            <Priority task={rev} index={index} width={200} updateTaskPriority={updateTaskPriority} />
+                            <TaskTitle>{rev.name}</TaskTitle>
+                            <EstimationBox>{daysLeft} day/(s) left</EstimationBox>
+                          </TaskLine>
+
+                          <TaskLine direction={'row'}>
+
+                            <Assignee task={rev} updateTaskUser={updateTaskUser} projectUsers={users} />
+
+                            <Status task={rev} width={150} updateTaskStatus={updateTaskStatus} />
+
+                          </TaskLine>
+                        </TaskItem>
+                      })  : <span></span>}
+                       {/* Revision ends */}
+
                     </TaskItem>
                   })}
+
                 </AccordianBody>
               </TaskItem>
 
@@ -423,6 +460,8 @@ const ProjectDetailsPage = (props) => {
           {selectedTask.id ? <TaskInfo>
             <TaskHeading>{selectedTask.name}<TitleText>{selectedTask.status}</TitleText></TaskHeading>
 
+            <TitleText>{selectedTask.description}</TitleText>
+            <br /><br />
             <SectionTitle>Started On: {new Date(selectedTask.startedOn).toLocaleDateString("en-GB", { month: 'long', year: "numeric", day: "numeric", hour12: true, hour: "2-digit", minute: "2-digit" })} </SectionTitle>
             <br /> <br />
             <SectionTitle>Estimated Days:</SectionTitle>
@@ -434,8 +473,14 @@ const ProjectDetailsPage = (props) => {
             <SectionTitle>Variance: <TitleText>{selectedTask.variance}</TitleText></SectionTitle>
             <br /> <br />
             <Button icon="task" disabled={selectedTask.status === "Done" || !selectedTask.checklist.every(task => task.isChecked)} iconSize={24} variant="success" onClick={() => updateTaskStatus("Done")} >Mark as Done </Button>
-            <Button icon="story" disabled={selectedTask.status === "Done"} iconSize={24} variant="secondary" onClick={() => updateTaskStatus("Done")} > <u>Create Revision </u></Button>
+
+            {/* Revisions */}
             <br /><br />
+            <Button icon="plus" disabled={selectedTask.status === "Done"} iconSize={24} variant="secondary" onClick={() => createRevision("INTERNAL")} > <u> Internal Revision </u></Button>
+            <Button icon="plus" iconSize={24} variant="secondary" onClick={() => createRevision("EXTERNAL")} > <u> External Revision </u></Button>
+            <br /><br />
+
+
             <SectionTitle>Check List:
 
             
@@ -504,12 +549,21 @@ const ProjectDetailsPage = (props) => {
             {
               selectedTMGroup.subtasks.map((subtask, index)=> {
                 return <Fragment key={index}> 
+                  <TaskTitle style={{ marginLeft: '20px' }}>Name:</TaskTitle>
                   <ModalInput
                     defaultValue={subtask.name}
                     index={index}
                     accessor={'name'}
-                    placeholder="Name"
+                    placeholder="Add a name"
                     onChange = {handleTaskCreationInput}
+                  />
+                  <TaskTitle style={{ marginLeft: '20px' }}>Description:</TaskTitle>
+                  <ModalInput
+                    defaultValue={subtask.description}
+                    index={index}
+                    accessor={'description'}
+                    placeholder="Add a description..."
+                    onChange={handleTaskCreationInput}
                   />
                   <TaskTitle style={{ marginLeft: '20px' }}>Priority:</TaskTitle>
                   <Priority task={{}} index={index} updateTaskPriority={handleTaskCreationInput} />

@@ -9,6 +9,7 @@ export enum IssueStatus {
   SELECTED = 'selected',
   INPROGRESS = 'inprogress',
   DONE = 'done',
+  REVISION = 'revision'
 }
 
 export enum IssuePriority {

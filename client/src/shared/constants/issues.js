@@ -9,6 +9,7 @@ export const IssueStatus = {
     SELECTED: 'selected',
     INPROGRESS: 'inprogress',
     DONE: 'done',
+    REVISION: 'revision'
 };
 
 export const TaskStatus = {
@@ -16,6 +17,7 @@ export const TaskStatus = {
     NOTSTARTED: 'Not Started',
     INPROGRESS: 'In Progress',
     DONE: 'Done',
+    REVISION: 'Revision'
 };
 
 export const TaskStatusCopy = {
@@ -23,6 +25,8 @@ export const TaskStatusCopy = {
     [TaskStatus.NOTSTARTED]: 'Not Started',
     [TaskStatus.INPROGRESS]: 'In Progress',
     [TaskStatus.DONE]: 'Done',
+    [TaskStatus.REVISION]: 'Revision'
+
 };
 
 export const IssuePriority = {

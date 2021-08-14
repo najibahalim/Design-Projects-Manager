@@ -19,7 +19,6 @@ import {IssuePriority } from 'constants/issues';
 import { Comment } from '.';
 import Users from './Users';
 import { TaskStatus } from 'constants/projects';
-import Revision from './Revision';
 @Entity()
 class Task extends BaseEntity {
   static validations = {
@@ -35,6 +34,10 @@ class Task extends BaseEntity {
 
   @Column('varchar')
   name: string;
+
+  @Column('varchar', { nullable: true })
+  description: string;
+
 
   @Column('varchar')
   status: TaskStatus;
@@ -52,6 +55,12 @@ class Task extends BaseEntity {
   @Column('integer', {nullable: true})
   actualDays: number;
 
+  @Column('bool', { default: false })
+  isRevision: boolean;
+
+  @Column('varchar', { nullable: true })
+  revisionType: "INTERNAL" | "EXTERNAL";
+
   @Column('integer', { nullable: true })
   variance: number;
 
@@ -60,7 +69,6 @@ class Task extends BaseEntity {
 
   @Column('integer')
   taskMasterId: number;
-
 
   @Column('integer', { nullable: true })
   groupID: number;
@@ -77,6 +85,12 @@ class Task extends BaseEntity {
   @ManyToOne(() => Item, item => item.tasks)
   item: Item;
 
+  @ManyToOne(() => Task, task => task.revisions)
+  mainTask: Task;
+
+  @Column('integer', { nullable: true })
+  mainTaskId: number;
+
   @ManyToOne(() => Users, user => user.tasks)
   assignee: Users;
   @RelationId((task: Task) => task.assignee)
@@ -90,10 +104,10 @@ class Task extends BaseEntity {
 
 
   @OneToMany(
-    () => Revision,
-    revision => revision.task,
+    () => Task,
+    task => task.mainTask,
   )
-  revisions: Revision[];
+  revisions: Task[];
  
   @BeforeInsert()
   @BeforeUpdate()

@@ -16,14 +16,21 @@ export const create = catchErrors(async (req, res) => {
   const tasks = [];
   for(const taskBody of req.body) {
     const taskCreationBody: Task = new Task();
-    taskCreationBody.name = taskBody.name,
-      taskCreationBody.priority = taskBody.priority;
+    taskCreationBody.name = taskBody.name;
+    taskCreationBody.description = taskBody.description;
+    taskCreationBody.priority = taskBody.priority;
     taskCreationBody.status = TaskStatus.NOTSTARTED;
     taskCreationBody.estimatedDays = taskBody.estimatedDays;
     taskCreationBody.actualDays = taskBody.actualDays;
     taskCreationBody.taskMasterId = taskBody.taskMasterId;
     taskCreationBody.checklist = taskBody.checklist;
     taskCreationBody.groupID = taskBody.groupID;
+    if (taskBody.isRevision && taskBody.mainTaskId) {
+      taskCreationBody.isRevision = true;
+      taskCreationBody.revisionType = taskBody.revisionType;
+      taskCreationBody.mainTask = await findEntityOrThrow(Task, taskBody.mainTaskId);
+      taskCreationBody.mainTaskId = taskCreationBody.mainTask.id;
+    }
     const [taskItem, taskUser] = await Promise.all([
       findEntityOrThrow(Item, taskBody.itemId),
       findEntityOrThrow(Users, taskBody.userId)
@@ -47,7 +54,8 @@ export const update = catchErrors(async (req, res) => {
   }
   const taskCreationBody: Task = new Task();
   taskCreationBody.id = req.body.id,
-  taskCreationBody.name = req.body.name,
+  taskCreationBody.name = req.body.name;
+  taskCreationBody.description = req.body.description;
   taskCreationBody.priority = req.body.priority;
   taskCreationBody.estimatedDays = req.body.estimatedDays;
   taskCreationBody.actualDays = req.body.actualDays;
