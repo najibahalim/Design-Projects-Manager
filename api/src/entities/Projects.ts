@@ -43,7 +43,7 @@ class Projects extends BaseEntity {
   @Column('text', { nullable: true })
   descriptionText: string | null;
 
-  @Column('timestamp', { nullable: true })
+  @Column('datetime', { nullable: true })
   committedDate: Date | null;
 
   @CreateDateColumn()
