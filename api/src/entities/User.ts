@@ -33,10 +33,10 @@ class User extends BaseEntity {
   @Column('varchar', { length: 2000 })
   avatarUrl: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @OneToMany(

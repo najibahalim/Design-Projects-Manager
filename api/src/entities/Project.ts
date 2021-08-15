@@ -35,10 +35,10 @@ class Project extends BaseEntity {
   @Column('varchar')
   category: ProjectCategory;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @OneToMany(

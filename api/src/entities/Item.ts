@@ -35,10 +35,10 @@ class Item extends BaseEntity {
   @Column('text', { nullable: true })
   descriptionText: string | null;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @ManyToOne(() => Projects, project => project.items)

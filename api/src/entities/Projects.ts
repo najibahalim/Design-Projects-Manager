@@ -46,10 +46,10 @@ class Projects extends BaseEntity {
   @Column('timestamp', { nullable: true })
   committedDate: Date | null;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @Column('integer')

@@ -41,7 +41,7 @@ class TaskHistory extends BaseEntity {
   action: string;
 
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
   
 }

@@ -25,16 +25,16 @@ class TaskMaster extends BaseEntity {
   @Column('integer', { nullable: true})
   estimatedDays: string;
 
-  @Column("varchar", { array: true, nullable: true })
+  @Column("simple-array", { nullable: true })
   checklist: string[];
 
   @ManyToOne(() => TaskMasterGroup, tmg => tmg.subtasks)
   group: TaskMasterGroup;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   

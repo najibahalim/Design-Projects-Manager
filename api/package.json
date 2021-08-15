@@ -5,7 +5,7 @@
     "license": "MIT",
     "scripts": {
         "start": "nodemon --exec ts-node --files src/index.ts",
-        "debug": "ts-node src/index.ts",
+        "debug": "ts-node src/index.ts --tls-min-v1.0",
         "start:test": "cross-env NODE_ENV='test' DB_DATABASE='jira_test' npm start",
         "start:production": "pm2 start --name 'jira_api' node -- -r ./tsconfig-paths.js build/index.js",
         "build": "cd src && tsc"
@@ -19,10 +19,11 @@
         "jsonwebtoken": "^8.5.1",
         "lodash": "^4.17.15",
         "module-alias": "^2.2.2",
+        "mssql": "^7.2.0",
         "pg": "8.3.3",
         "reflect-metadata": "^0.1.13",
         "striptags": "^3.1.1",
-        "typeorm": "^0.2.30"
+        "typeorm": "0.2.30"
     },
     "devDependencies": {
         "@types/cors": "^2.8.6",

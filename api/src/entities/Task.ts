@@ -55,7 +55,7 @@ class Task extends BaseEntity {
   @Column('integer', {nullable: true})
   actualDays: number;
 
-  @Column('bool', { default: false })
+  @Column('tinyint', { default: false })
   isRevision: boolean;
 
   @Column('varchar', { nullable: true })
@@ -73,13 +73,13 @@ class Task extends BaseEntity {
   @Column('integer', { nullable: true })
   groupID: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @Column()
   startedOn: Date;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @ManyToOne(() => Item, item => item.tasks)

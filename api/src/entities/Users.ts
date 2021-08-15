@@ -31,10 +31,10 @@ class Users extends BaseEntity {
   @Column('varchar', { length: 2000, nullable: true })
   password: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @OneToMany(

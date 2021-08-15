@@ -21,10 +21,10 @@ class TaskMasterGroup extends BaseEntity {
   @Column('varchar')
   name: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @OneToMany(

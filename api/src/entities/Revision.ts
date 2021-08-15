@@ -65,13 +65,13 @@ class Revision extends BaseEntity {
   @Column('integer', { nullable: true })
   groupID: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   startedOn: Date;
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   updatedAt: Date;
 
   @ManyToOne(() => Item, item => item.tasks)
